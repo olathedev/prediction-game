@@ -4,8 +4,6 @@ pragma solidity ^0.8.13;
 contract Game {
     address public owner;
 
-    
-
     constructor() {
         owner = msg.sender;
     }
