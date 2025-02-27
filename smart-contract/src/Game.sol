@@ -81,4 +81,25 @@ contract Game {
 
         emit Events.MatchCreated(totalPools, _roiYes, _roiNo, deadline);
     }
+
+    function predict(uint _poolId, Answer _answer) external payable {
+        MatchPool storage pool = matchPools[_poolId];
+        if (pool.deadline < block.timestamp) {
+            revert Errors.InvalidDeadline();
+        }
+        if (_answer == Answer.None) {
+            revert Errors.InvalidAnswer();
+        }
+        if (msg.value == 0) {
+            revert Errors.InvalidStake();
+        }
+        if (_poolId == 0 || _poolId > totalPools) {
+            revert Errors.InvalidPoolId();
+        }
+
+        pool.stakes[msg.sender] += msg.value;
+        pool.totalAmount += msg.value;
+        pool.answer[msg.sender] = _answer;
+        players[msg.sender].totalPredictions++;
+    }
 }
