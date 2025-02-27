@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+import "./lib/Errors.sol";
+import "./lib/Events.sol";
+
 contract Game {
     struct Player {
         address playerAddress;
@@ -23,5 +26,20 @@ contract Game {
         _;
     }
 
-    function createPlayer(string memory _username) external {}
+    function createPlayer(string memory _username) external {
+        if (bytes(_username).length == 0) {
+            revert Errors.UsernameCannotBeEmpty();
+        }
+        players[msg.sender] = Player({
+            playerAddress: msg.sender,
+            username: _username,
+            totalPoints: 0,
+            correctPredictions: 0,
+            totalPredictions: 0
+        });
+
+        emit Events.PlayerRegistered(msg.sender, _username);
+    }
+
+    
 }
