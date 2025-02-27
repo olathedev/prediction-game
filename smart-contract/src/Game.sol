@@ -2,10 +2,6 @@
 pragma solidity ^0.8.13;
 
 contract Game {
-
-
-
-   
     struct Player {
         address playerAddress;
         string username;
@@ -14,9 +10,18 @@ contract Game {
         uint256 totalPredictions;
     }
 
-   mapping(address => Player) public players;
+    mapping(address => Player) public players;
 
-   function createPlayer(string memory _username)external{
-      
-   }
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Game: only owner can call this function");
+        _;
+    }
+
+    function createPlayer(string memory _username) external {}
 }
