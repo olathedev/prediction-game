@@ -4,8 +4,17 @@ import "./lib/Errors.sol";
 import "./lib/Events.sol";
 
 contract Game {
-    address public owner;
+    struct Player {
+        address playerAddress;
+        string username;
+        uint256 totalPoints;
+        uint256 correctPredictions;
+        uint256 totalPredictions;
+    }
 
+    mapping(address => Player) public players;
+
+    address public owner;
     enum Answer {
         None,
         Yes,
@@ -35,15 +44,30 @@ contract Game {
         _;
     }
 
+    function createPlayer(string memory _username) external {
+        if (bytes(_username).length == 0) {
+            revert Errors.UsernameCannotBeEmpty();
+        }
+        players[msg.sender] = Player({
+            playerAddress: msg.sender,
+            username: _username,
+            totalPoints: 0,
+            correctPredictions: 0,
+            totalPredictions: 0
+        });
+
+        emit Events.PlayerRegistered(msg.sender, _username);
+    }
+
     function createMatchPool(
         uint _roiYes,
         uint _roiNo,
         uint _deadline
     ) external onlyOwner {
-        if(_roiYes == 0 || _roiNo == 0) {
+        if (_roiYes == 0 || _roiNo == 0) {
             revert Errors.InvalidRoi();
         }
-        if(_deadline == 0) {
+        if (_deadline == 0) {
             revert Errors.InvalidDeadline();
         }
 
