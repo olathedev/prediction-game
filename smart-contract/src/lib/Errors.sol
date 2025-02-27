@@ -3,4 +3,9 @@ pragma solidity ^0.8.13;
 
 library Errors {
     error UsernameCannotBeEmpty();
+    error InvalidRoi();
+    error InvalidDeadline();
+    error InvalidAnswer();
+    error InvalidStake();
+    error InvalidPoolId();
 }
