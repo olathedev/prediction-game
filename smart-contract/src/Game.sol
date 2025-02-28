@@ -21,7 +21,7 @@ contract Game {
         No
     }
 
-    struct MatchPool {
+    struct PredictPool {
         uint roiYes;
         uint roiNo;
         uint totalAmount;
@@ -33,7 +33,7 @@ contract Game {
 
     uint totalPools;
 
-    mapping(uint => MatchPool) public matchPools;
+    mapping(uint => PredictPool) public matchPools;
 
     constructor() {
         owner = msg.sender;
@@ -82,7 +82,7 @@ contract Game {
         uint deadline = _deadline * 1 days + block.timestamp;
 
         totalPools++;
-        MatchPool storage pool = matchPools[totalPools];
+        PredictPool storage pool = matchPools[totalPools];
         pool.roiYes = _roiYes;
         pool.roiNo = _roiNo;
         pool.deadline = deadline;
@@ -90,9 +90,32 @@ contract Game {
         emit Events.MatchCreated(totalPools, _roiYes, _roiNo, deadline);
     }
 
+    function predict(uint _poolId, Answer _answer) external payable {
+        PredictPool storage pool = matchPools[_poolId];
+        if (pool.deadline < block.timestamp) {
+            revert Errors.InvalidDeadline();
+        }
+        if (_answer == Answer.None) {
+            revert Errors.InvalidAnswer();
+        }
+        if (msg.value == 0) {
+            revert Errors.InvalidStake();
+        }
+        if (_poolId == 0 || _poolId > totalPools) {
+            revert Errors.InvalidPoolId();
+        }
 
-    function updateCorrectAnswer(uint _poolId, Answer _answer) external onlyOwner {
-        MatchPool storage pool = matchPools[_poolId];
+        pool.stakes[msg.sender] += msg.value;
+        pool.totalAmount += msg.value;
+        pool.answer[msg.sender] = _answer;
+        players[msg.sender].totalPredictions++;
+    }
+
+    function updateCorrectAnswer(
+        uint _poolId,
+        Answer _answer
+    ) external onlyOwner {
+        PredictPool storage pool = matchPools[_poolId];
         if (_answer == Answer.None) {
             revert Errors.InvalidAnswer();
         }
@@ -101,7 +124,9 @@ contract Game {
         emit Events.AnswerSet(_poolId, uint(_answer));
     }
 
-    function getPoolDetails(uint _poolId)
+    function getPoolDetails(
+        uint _poolId
+    )
         external
         view
         returns (
@@ -112,7 +137,13 @@ contract Game {
             Answer correctAnswer
         )
     {
-        MatchPool storage pool = matchPools[_poolId];
-        return (pool.roiYes, pool.roiNo, pool.totalAmount, pool.deadline, pool.correctAnswer);
+        PredictPool storage pool = matchPools[_poolId];
+        return (
+            pool.roiYes,
+            pool.roiNo,
+            pool.totalAmount,
+            pool.deadline,
+            pool.correctAnswer
+        );
     }
 }

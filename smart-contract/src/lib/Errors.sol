@@ -8,4 +8,6 @@ library Errors {
     error InvalidAnswer();
     error InvalidStake();
     error InvalidPoolId();
+    error DeadlineNotReached();
+    error ResultAlreadySet();
 }

@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 library Events {
     event PlayerRegistered(address indexed player, string username);
-    event MatchCreated(
+      event MatchCreated(
         uint indexed poolId,
         uint roiYes,
         uint roiNo,
@@ -12,5 +12,5 @@ library Events {
     event AnswerSet(
         uint indexed poolId,
         uint answer
-    );
+    );   
 }
