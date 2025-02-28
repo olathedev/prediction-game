@@ -101,5 +101,18 @@ contract Game {
         emit Events.AnswerSet(_poolId, uint(_answer));
     }
 
-    
+    function getPoolDetails(uint _poolId)
+        external
+        view
+        returns (
+            uint roiYes,
+            uint roiNo,
+            uint totalAmount,
+            uint deadline,
+            Answer correctAnswer
+        )
+    {
+        MatchPool storage pool = matchPools[_poolId];
+        return (pool.roiYes, pool.roiNo, pool.totalAmount, pool.deadline, pool.correctAnswer);
+    }
 }
