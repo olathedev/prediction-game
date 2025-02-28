@@ -102,4 +102,12 @@ contract Game {
         pool.answer[msg.sender] = _answer;
         players[msg.sender].totalPredictions++;
     }
+
+    function getPlayerDetails(address _playerAddress)
+        external
+        view
+        returns (Player memory)
+    {
+        return players[_playerAddress];
+    }
 }
