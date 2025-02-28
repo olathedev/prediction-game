@@ -39,5 +39,9 @@ contract GameTest is Test {
         (address playerAddress, string memory username, uint256 totalPoints, uint256 correctPredictions, uint256 totalPredictions) = gameContract.players(user);
 
         assertEq(playerAddress, user);
+        assertEq(username, "test");
+        assertEq(totalPoints, 0);
+        assertEq(correctPredictions, 0);
+        assertEq(totalPredictions, 0);
     }
 }
