@@ -52,7 +52,7 @@ contract Game {
         _;
     }
 
-    function createPlayer(string memory _username) external onlyPlayer {
+    function createPlayer(string memory _username) external {
         if (bytes(_username).length == 0) {
             revert Errors.UsernameCannotBeEmpty();
         }
@@ -90,7 +90,7 @@ contract Game {
         emit Events.MatchCreated(totalPools, _roiYes, _roiNo, deadline);
     }
 
-    function predict(uint _poolId, Answer _answer) external payable {
+    function predict(uint _poolId, Answer _answer) external payable onlyPlayer() {
         PredictPool storage pool = matchPools[_poolId];
         if (pool.deadline < block.timestamp) {
             revert Errors.InvalidDeadline();
