@@ -16,4 +16,8 @@ contract GameTest is Test {
         assertEq(owner, address(this));
     }
 
+    function test_create_prediction_pool() public {
+        
+    }
+
 }
