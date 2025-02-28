@@ -21,7 +21,7 @@ contract Game {
         No
     }
 
-    struct MatchPool {
+    struct PredictPool {
         uint roiYes;
         uint roiNo;
         uint totalAmount;
@@ -33,7 +33,7 @@ contract Game {
 
     uint totalPools;
 
-    mapping(uint => MatchPool) public matchPools;
+    mapping(uint => PredictPool) public matchPools;
 
     constructor() {
         owner = msg.sender;
@@ -74,11 +74,32 @@ contract Game {
         uint deadline = _deadline * 1 days + block.timestamp;
 
         totalPools++;
-        MatchPool storage pool = matchPools[totalPools];
+        PredictPool storage pool = matchPools[totalPools];
         pool.roiYes = _roiYes;
         pool.roiNo = _roiNo;
         pool.deadline = deadline;
 
         emit Events.MatchCreated(totalPools, _roiYes, _roiNo, deadline);
+    }
+
+    function predict(uint _poolId, Answer _answer) external payable {
+        PredictPool storage pool = matchPools[_poolId];
+        if (pool.deadline < block.timestamp) {
+            revert Errors.InvalidDeadline();
+        }
+        if (_answer == Answer.None) {
+            revert Errors.InvalidAnswer();
+        }
+        if (msg.value == 0) {
+            revert Errors.InvalidStake();
+        }
+        if (_poolId == 0 || _poolId > totalPools) {
+            revert Errors.InvalidPoolId();
+        }
+
+        pool.stakes[msg.sender] += msg.value;
+        pool.totalAmount += msg.value;
+        pool.answer[msg.sender] = _answer;
+        players[msg.sender].totalPredictions++;
     }
 }
