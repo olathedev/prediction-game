@@ -2,10 +2,21 @@
 pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
-import '../src/Game.sol';
+import "../src/Game.sol";
+import "../src/lib/Errors.sol";
 
 contract GameTest is Test {
     Game gameContract;
+
+    address user = address(1);
+
+    struct Player {
+        address playerAddress;
+        string username;
+        uint256 totalPoints;
+        uint256 correctPredictions;
+        uint256 totalPredictions;
+    }
 
     function setUp() public {
         gameContract = new Game();
@@ -16,4 +27,17 @@ contract GameTest is Test {
         assertEq(owner, address(this));
     }
 
+    function test_fail_if_invalidusername() public {
+        vm.expectRevert(Errors.UsernameCannotBeEmpty.selector);
+        gameContract.createPlayer("");
+    }
+
+    function test_create_player_successfully() public {
+        vm.prank(user);
+        gameContract.createPlayer("test");
+
+        (address playerAddress, string memory username, uint256 totalPoints, uint256 correctPredictions, uint256 totalPredictions) = gameContract.players(user);
+
+        assertEq(playerAddress, user);
+    }
 }

@@ -44,6 +44,14 @@ contract Game {
         _;
     }
 
+    modifier onlyPlayer() {
+        require(
+            players[msg.sender].playerAddress == msg.sender,
+            "Game: only player can call this function"
+        );
+        _;
+    }
+
     function createPlayer(string memory _username) external {
         if (bytes(_username).length == 0) {
             revert Errors.UsernameCannotBeEmpty();
@@ -82,7 +90,7 @@ contract Game {
         emit Events.MatchCreated(totalPools, _roiYes, _roiNo, deadline);
     }
 
-    function predict(uint _poolId, Answer _answer) external payable {
+    function predict(uint _poolId, Answer _answer) external payable onlyPlayer() {
         PredictPool storage pool = matchPools[_poolId];
         if (pool.deadline < block.timestamp) {
             revert Errors.InvalidDeadline();
@@ -109,5 +117,40 @@ contract Game {
         returns (Player memory)
     {
         return players[_playerAddress];
+    }
+    function updateCorrectAnswer(
+        uint _poolId,
+        Answer _answer
+    ) external onlyOwner {
+        PredictPool storage pool = matchPools[_poolId];
+        if (_answer == Answer.None) {
+            revert Errors.InvalidAnswer();
+        }
+        pool.correctAnswer = _answer;
+
+        emit Events.AnswerSet(_poolId, uint(_answer));
+    }
+
+    function getPoolDetails(
+        uint _poolId
+    )
+        external
+        view
+        returns (
+            uint roiYes,
+            uint roiNo,
+            uint totalAmount,
+            uint deadline,
+            Answer correctAnswer
+        )
+    {
+        PredictPool storage pool = matchPools[_poolId];
+        return (
+            pool.roiYes,
+            pool.roiNo,
+            pool.totalAmount,
+            pool.deadline,
+            pool.correctAnswer
+        );
     }
 }
