@@ -8,5 +8,9 @@ library Events {
         uint roiYes,
         uint roiNo,
         uint deadline
+    );
+    event AnswerSet(
+        uint indexed poolId,
+        uint answer
     );   
 }

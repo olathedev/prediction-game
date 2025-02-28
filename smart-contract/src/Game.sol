@@ -44,7 +44,15 @@ contract Game {
         _;
     }
 
-    function createPlayer(string memory _username) external {
+    modifier onlyPlayer() {
+        require(
+            players[msg.sender].playerAddress == msg.sender,
+            "Game: only player can call this function"
+        );
+        _;
+    }
+
+    function createPlayer(string memory _username) external onlyPlayer {
         if (bytes(_username).length == 0) {
             revert Errors.UsernameCannotBeEmpty();
         }
@@ -101,5 +109,41 @@ contract Game {
         pool.totalAmount += msg.value;
         pool.answer[msg.sender] = _answer;
         players[msg.sender].totalPredictions++;
+    }
+
+    function updateCorrectAnswer(
+        uint _poolId,
+        Answer _answer
+    ) external onlyOwner {
+        PredictPool storage pool = matchPools[_poolId];
+        if (_answer == Answer.None) {
+            revert Errors.InvalidAnswer();
+        }
+        pool.correctAnswer = _answer;
+
+        emit Events.AnswerSet(_poolId, uint(_answer));
+    }
+
+    function getPoolDetails(
+        uint _poolId
+    )
+        external
+        view
+        returns (
+            uint roiYes,
+            uint roiNo,
+            uint totalAmount,
+            uint deadline,
+            Answer correctAnswer
+        )
+    {
+        PredictPool storage pool = matchPools[_poolId];
+        return (
+            pool.roiYes,
+            pool.roiNo,
+            pool.totalAmount,
+            pool.deadline,
+            pool.correctAnswer
+        );
     }
 }
