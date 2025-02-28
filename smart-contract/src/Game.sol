@@ -56,6 +56,7 @@ contract Game {
         if (bytes(_username).length == 0) {
             revert Errors.UsernameCannotBeEmpty();
         }
+        // verify that username does not exist
         players[msg.sender] = Player({
             playerAddress: msg.sender,
             username: _username,
