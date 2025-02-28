@@ -8,7 +8,7 @@ import "./lib/Event.sol";
 
 contract StakingPool is ReentrancyGuard {
      IERC20 public coreToken;
-     address owner;
+     address public owner;
 
      struct Stake {
          uint256 amount;
@@ -19,6 +19,7 @@ contract StakingPool is ReentrancyGuard {
         bool isLocked;
         uint256 totalStaked;
         uint256 expireTime;
+        uint256 stakersCount;
      }
 
     uint poolId;
@@ -39,14 +40,14 @@ contract StakingPool is ReentrancyGuard {
         if (_stakingToken == address(0)) revert Errors.InvalidAddress();
         if (_expireTime <= 0) revert Errors.LessThanZero();
 
-        try IERC20(_stakingToken).totalSupply() {} catch {
-            revert Errors.MustBeAnERC20Token();
-        }
+        IERC20 stakingToken = IERC20(_stakingToken);
+        if (stakingToken.totalSupply() <= 0) revert Errors.InvalidTokenSupply();
 
         poolId++;
         pools[poolId] = Pool({
             isLocked: false,
             totalStaked: 0,
+            stakersCount: 0,
             expireTime: _expireTime
         });
     }
@@ -65,6 +66,7 @@ contract StakingPool is ReentrancyGuard {
             timestamp: block.timestamp
         });
         pools[_poolId].totalStaked += _amount;
+        pools[_poolId].stakersCount++;
     }
 
 }

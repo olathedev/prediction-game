@@ -14,4 +14,5 @@ library Errors {
     error NoRewardTokens();
     error InvalidPool();
     error ExpiredPool();
+    error InvalidTokenSupply();
 }
