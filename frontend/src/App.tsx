@@ -1,8 +1,8 @@
 
 function App() {
   return (
-    <main className="h-screen w-full flex ">
-
+    <main className="min-h-screen max-w-3xl mx-auto h-screen p-4">
+      
     </main>
   )
 }
