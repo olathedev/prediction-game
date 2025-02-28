@@ -21,7 +21,7 @@ contract Game {
         No
     }
 
-    struct MatchPool {
+    struct PredictPool {
         uint roiYes;
         uint roiNo;
         uint totalAmount;
@@ -33,7 +33,7 @@ contract Game {
 
     uint totalPools;
 
-    mapping(uint => MatchPool) public matchPools;
+    mapping(uint => PredictPool) public matchPools;
 
     constructor() {
         owner = msg.sender;
@@ -74,7 +74,7 @@ contract Game {
         uint deadline = _deadline * 1 days + block.timestamp;
 
         totalPools++;
-        MatchPool storage pool = matchPools[totalPools];
+        PredictPool storage pool = matchPools[totalPools];
         pool.roiYes = _roiYes;
         pool.roiNo = _roiNo;
         pool.deadline = deadline;
@@ -83,7 +83,7 @@ contract Game {
     }
 
     function predict(uint _poolId, Answer _answer) external payable {
-        MatchPool storage pool = matchPools[_poolId];
+        PredictPool storage pool = matchPools[_poolId];
         if (pool.deadline < block.timestamp) {
             revert Errors.InvalidDeadline();
         }
