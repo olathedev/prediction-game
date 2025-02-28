@@ -111,6 +111,13 @@ contract Game {
         players[msg.sender].totalPredictions++;
     }
 
+    function getPlayerDetails(address _playerAddress)
+        external
+        view
+        returns (Player memory)
+    {
+        return players[_playerAddress];
+    }
     function updateCorrectAnswer(
         uint _poolId,
         Answer _answer
