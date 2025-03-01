@@ -22,8 +22,6 @@ contract Game {
     }
 
     struct PredictPool {
-        uint roiYes;
-        uint roiNo;
         uint totalAmount;
         uint deadline;
         Answer correctAnswer;
@@ -52,7 +50,6 @@ contract Game {
         _;
     }
 
-
     function createMatchPool(
         uint _roiYes,
         uint _roiNo,
@@ -69,19 +66,18 @@ contract Game {
 
         totalPools++;
         PredictPool storage pool = matchPools[totalPools];
-        pool.roiYes = _roiYes;
-        pool.roiNo = _roiNo;
         pool.deadline = deadline;
 
         emit Events.MatchCreated(totalPools, _roiYes, _roiNo, deadline);
     }
 
-
     function createPlayer(string memory _username) external {
         if (bytes(_username).length == 0) {
             revert Errors.UsernameCannotBeEmpty();
         }
-        // verify that username does not exist
+        if (players[msg.sender].playerAddress == msg.sender) {
+            revert Errors.UsernameAlreadyExists();
+        }
         players[msg.sender] = Player({
             playerAddress: msg.sender,
             username: _username,
@@ -133,62 +129,14 @@ contract Game {
         emit Events.AnswerSet(_poolId, uint(_answer));
     }
 
-    function distributeRewards(uint _poolId) external onlyOwner {
-        PredictPool storage pool = matchPools[_poolId];
-        if (pool.correctAnswer == Answer.None) {
-            revert Errors.AnswerNotSet();
-        }
-        if (pool.totalAmount == 0) {
-            revert Errors.NoFundsInPool();
-        }
-
-        uint totalYesStakes;
-        uint totalNoStakes;
-
-        for (uint i = 0; i < totalPools; i++) {
-            if (pool.answer[msg.sender] == Answer.Yes) {
-                totalYesStakes += pool.stakes[msg.sender];
-            } else if (pool.answer[msg.sender] == Answer.No) {
-                totalNoStakes += pool.stakes[msg.sender];
-            }
-        }
-
-        for (uint i = 0; i < totalPools; i++) {
-            if (pool.answer[msg.sender] == pool.correctAnswer) {
-                uint reward = (pool.stakes[msg.sender] * pool.totalAmount) /
-                    (
-                        pool.correctAnswer == Answer.Yes
-                            ? totalYesStakes
-                            : totalNoStakes
-                    );
-                payable(msg.sender).transfer(reward);
-
-                players[msg.sender].totalPoints += reward;
-                players[msg.sender].correctPredictions++;
-            }
-        }
-    }
-
     function getPoolDetails(
         uint _poolId
     )
         external
         view
-        returns (
-            uint roiYes,
-            uint roiNo,
-            uint totalAmount,
-            uint deadline,
-            Answer correctAnswer
-        )
+        returns (uint totalAmount, uint deadline, Answer correctAnswer)
     {
         PredictPool storage pool = matchPools[_poolId];
-        return (
-            pool.roiYes,
-            pool.roiNo,
-            pool.totalAmount,
-            pool.deadline,
-            pool.correctAnswer
-        );
+        return (pool.totalAmount, pool.deadline, pool.correctAnswer);
     }
 }

@@ -40,10 +40,10 @@ const Question = () => {
       </div>
 
       <div className="w-full flex gap-4">
-        <button className="bg-purple-500/60 py-2 w-1/2 rounded-lg text-sm inline-flex flex-col">
+        <button className="bg-purple-400/60 py-2 w-1/2 rounded-lg text-sm">
           Yes
         </button>
-        <button className="bg-purple-500/60  py-2 w-1/2 rounded-lg text-sm inline-flex flex-col">
+        <button className="bg-purple-400/60  py-2 w-1/2 rounded-lg text-sm ">
           No
         </button>
       </div>
