@@ -1,4 +1,3 @@
-import Body from "../../components/Body"
 import Question from "../../components/Question"
 import mockQuestions from "../../constants/mockQuestions"
 
