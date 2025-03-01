@@ -13,4 +13,6 @@ library Errors {
     error MustBeAnERC20Token();
     error NoRewardTokens();
     error InvalidPool();
+    error ExpiredPool();
+    error InvalidTokenSupply();
 }
