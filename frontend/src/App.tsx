@@ -7,7 +7,7 @@ import Header from "./components/Header";
 
 function App() {
   return (
-    <main className="min-h-screen max-w-3xl mx-auto h-screen relative">
+    <main className="min-h-screen max-w-4xl mx-auto h-screen relative">
       <header className="fixed md:top-2 h-14 w-full right-0 z-50 flex items-center justify-center bottom-0">
         <Header />
       </header>
