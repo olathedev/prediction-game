@@ -10,4 +10,6 @@ library Errors {
     error InvalidPoolId();
     error DeadlineNotReached();
     error ResultAlreadySet();
+    error AnswerNotSet();
+    error NoFundsInPool();
 }

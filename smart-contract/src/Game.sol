@@ -52,21 +52,6 @@ contract Game {
         _;
     }
 
-    function createPlayer(string memory _username) external {
-        if (bytes(_username).length == 0) {
-            revert Errors.UsernameCannotBeEmpty();
-        }
-        // verify that username does not exist
-        players[msg.sender] = Player({
-            playerAddress: msg.sender,
-            username: _username,
-            totalPoints: 0,
-            correctPredictions: 0,
-            totalPredictions: 0
-        });
-
-        emit Events.PlayerRegistered(msg.sender, _username);
-    }
 
     function createMatchPool(
         uint _roiYes,
@@ -91,7 +76,24 @@ contract Game {
         emit Events.MatchCreated(totalPools, _roiYes, _roiNo, deadline);
     }
 
-    function predict(uint _poolId, Answer _answer) external payable onlyPlayer() {
+
+    function createPlayer(string memory _username) external {
+        if (bytes(_username).length == 0) {
+            revert Errors.UsernameCannotBeEmpty();
+        }
+        // verify that username does not exist
+        players[msg.sender] = Player({
+            playerAddress: msg.sender,
+            username: _username,
+            totalPoints: 0,
+            correctPredictions: 0,
+            totalPredictions: 0
+        });
+
+        emit Events.PlayerRegistered(msg.sender, _username);
+    }
+
+    function predict(uint _poolId, Answer _answer) external payable onlyPlayer {
         PredictPool storage pool = matchPools[_poolId];
         if (pool.deadline < block.timestamp) {
             revert Errors.InvalidDeadline();
@@ -112,13 +114,12 @@ contract Game {
         players[msg.sender].totalPredictions++;
     }
 
-    function getPlayerDetails(address _playerAddress)
-        external
-        view
-        returns (Player memory)
-    {
+    function getPlayerDetails(
+        address _playerAddress
+    ) external view returns (Player memory) {
         return players[_playerAddress];
     }
+
     function updateCorrectAnswer(
         uint _poolId,
         Answer _answer
@@ -130,6 +131,42 @@ contract Game {
         pool.correctAnswer = _answer;
 
         emit Events.AnswerSet(_poolId, uint(_answer));
+    }
+
+    function distributeRewards(uint _poolId) external onlyOwner {
+        PredictPool storage pool = matchPools[_poolId];
+        if (pool.correctAnswer == Answer.None) {
+            revert Errors.AnswerNotSet();
+        }
+        if (pool.totalAmount == 0) {
+            revert Errors.NoFundsInPool();
+        }
+
+        uint totalYesStakes;
+        uint totalNoStakes;
+
+        for (uint i = 0; i < totalPools; i++) {
+            if (pool.answer[msg.sender] == Answer.Yes) {
+                totalYesStakes += pool.stakes[msg.sender];
+            } else if (pool.answer[msg.sender] == Answer.No) {
+                totalNoStakes += pool.stakes[msg.sender];
+            }
+        }
+
+        for (uint i = 0; i < totalPools; i++) {
+            if (pool.answer[msg.sender] == pool.correctAnswer) {
+                uint reward = (pool.stakes[msg.sender] * pool.totalAmount) /
+                    (
+                        pool.correctAnswer == Answer.Yes
+                            ? totalYesStakes
+                            : totalNoStakes
+                    );
+                payable(msg.sender).transfer(reward);
+
+                players[msg.sender].totalPoints += reward;
+                players[msg.sender].correctPredictions++;
+            }
+        }
     }
 
     function getPoolDetails(
