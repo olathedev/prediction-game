@@ -37,16 +37,6 @@ const Admin = () => {
         >
           <input
             type="text"
-            placeholder="ROI for option yes"
-            className="border border-[#00D4FF] rounded-lg p-2"
-          />
-          <input
-            type="text"
-            placeholder="ROI for option yes"
-            className="border border-[#00D4FF] rounded-lg p-2"
-          />
-          <input
-            type="text"
             placeholder="Deadline for prediction"
             className="border border-[#00D4FF] rounded-lg p-2"
           />
