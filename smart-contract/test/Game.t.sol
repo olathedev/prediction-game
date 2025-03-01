@@ -1,47 +1,109 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {Test, console} from "forge-std/Test.sol";
+import "forge-std/Test.sol";
 import "../src/Game.sol";
-import "../src/lib/Errors.sol";
 
 contract GameTest is Test {
-    Game gameContract;
-
-    address user = address(1);
-
-    struct Player {
-        address playerAddress;
-        string username;
-        uint256 totalPoints;
-        uint256 correctPredictions;
-        uint256 totalPredictions;
-    }
+    Game game;
+    address owner = address(this);
+    address alice = address(0x1);
+    address bob = address(0x2);
 
     function setUp() public {
-        gameContract = new Game();
+        game = new Game();
+        vm.deal(alice, 100 ether);
+        vm.deal(bob, 100 ether);
     }
 
-    function test_deploy_contract_successfully() public view {
-        address owner = gameContract.owner();
-        assertEq(owner, address(this));
+    function testCreatePlayer() public {
+        vm.prank(alice);
+        game.createPlayer("Alice");
+        Game.Player memory playerAlice = game.getPlayerDetails(alice);
+        assertEq(playerAlice.totalPoints, 0);
+        assertEq(playerAlice.correctPredictions, 0);
+        assertEq(playerAlice.totalPredictions, 0);
+        assertEq(keccak256(bytes(playerAlice.username)), keccak256(bytes("Alice")));
     }
 
-    function test_fail_if_invalidusername() public {
-        vm.expectRevert(Errors.UsernameCannotBeEmpty.selector);
-        gameContract.createPlayer("");
+    function testCreateMatchPool() public {
+        game.createMatchPool(1);
+        (uint totalAmount, uint deadline, Game.Answer correctAnswer) = game.getPoolDetails(1);
+        assertEq(totalAmount, 0);
+        assertTrue(deadline > block.timestamp);
+        assertEq(uint(correctAnswer), uint(Game.Answer.None));
     }
 
-    function test_create_player_successfully() public {
-        vm.prank(user);
-        gameContract.createPlayer("test");
+    function testPredictAndAlreadyPredicted() public {
+        game.createMatchPool(1);
+        vm.prank(alice);
+        game.createPlayer("Alice");
+        vm.prank(alice);
+        game.predict{value: 1 ether}(1, Game.Answer.Yes);
+        vm.prank(alice);
+        vm.expectRevert();
+        game.predict{value: 1 ether}(1, Game.Answer.No);
+    }
 
-        (address playerAddress, string memory username, uint256 totalPoints, uint256 correctPredictions, uint256 totalPredictions) = gameContract.players(user);
+    function testInvalidStake() public {
+        game.createMatchPool(1);
+        vm.prank(alice);
+        game.createPlayer("Alice");
+        vm.prank(alice);
+        vm.expectRevert();
+        game.predict{value: 0}(1, Game.Answer.Yes);
+    }
 
-        assertEq(playerAddress, user);
-        assertEq(username, "test");
-        assertEq(totalPoints, 0);
-        assertEq(correctPredictions, 0);
-        assertEq(totalPredictions, 0);
+    function testPredictAfterDeadline() public {
+        game.createMatchPool(1);
+        vm.prank(alice);
+        game.createPlayer("Alice");
+        vm.prank(alice);
+        game.predict{value: 1 ether}(1, Game.Answer.Yes);
+        ( , uint deadline, ) = game.getPoolDetails(1);
+        vm.warp(deadline + 1);
+        vm.prank(bob);
+        vm.expectRevert();
+        game.predict{value: 1 ether}(1, Game.Answer.No);
+    }
+
+    function testUpdateCorrectAnswerAndDistributeRewards() public {
+        game.createMatchPool(1);
+        vm.prank(alice);
+        game.createPlayer("Alice");
+        vm.prank(bob);
+        game.createPlayer("Bob");
+        vm.prank(alice);
+        game.predict{value: 2 ether}(1, Game.Answer.Yes);
+        vm.prank(bob);
+        game.predict{value: 1 ether}(1, Game.Answer.No);
+        game.updateCorrectAnswer(1, Game.Answer.Yes);
+        game.distributeRewards(1);
+        Game.Player memory alicePlayer = game.getPlayerDetails(alice);
+        Game.Player memory bobPlayer = game.getPlayerDetails(bob);
+        uint expectedBonusAlice = (2 ether * (3 ether * 500)) / (3 ether);
+        uint expectedBonusBob = 0;
+        assertEq(alicePlayer.totalPoints, expectedBonusAlice);
+        assertEq(bobPlayer.totalPoints, expectedBonusBob);
+    }
+
+    function testRewardDistribution() public {
+        game.createMatchPool(1);
+        vm.prank(alice);
+        game.createPlayer("Alice");
+        vm.prank(bob);
+        game.createPlayer("Bob");
+        vm.prank(alice);
+        game.predict{value: 2 ether}(1, Game.Answer.Yes);
+        vm.prank(bob);
+        game.predict{value: 1 ether}(1, Game.Answer.Yes);
+        game.updateCorrectAnswer(1, Game.Answer.Yes);
+        game.distributeRewards(1);
+        Game.Player memory alicePlayer = game.getPlayerDetails(alice);
+        Game.Player memory bobPlayer = game.getPlayerDetails(bob);
+        uint expectedBonusAlice = (2 ether * (3 ether * 500)) / (3 ether);
+        uint expectedBonusBob = (1 ether * (3 ether * 500)) / (3 ether);
+        assertEq(alicePlayer.totalPoints, expectedBonusAlice);
+        assertEq(bobPlayer.totalPoints, expectedBonusBob);
     }
 }
