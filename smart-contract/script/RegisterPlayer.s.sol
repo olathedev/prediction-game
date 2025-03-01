@@ -7,6 +7,7 @@ import "../src/Game.sol";
 contract RegisterPlayerScript is Script {
     function run() external {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
+        // Remove vm.deal since we're on testnet and need real funds
         vm.startBroadcast(privateKey);
 
         // Use the deployed contract address from your environment
