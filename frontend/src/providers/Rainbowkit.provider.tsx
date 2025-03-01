@@ -24,7 +24,7 @@ const CustomRainbowKitProvider = ({ children }: { children: ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={darkTheme({
-            accentColor: "#9b59b6",
+            accentColor: "#68399D",
             fontStack: "system",
             overlayBlur: "small",
             borderRadius: "large",
