@@ -9,16 +9,12 @@ contract GetPoolDetailsScript is Script {
         Game game = Game(vm.envAddress("GAME_ADDRESS"));
         uint poolId = 1;
         (
-            uint roiYes,
-            uint roiNo,
             uint totalAmount,
             uint deadline,
             Game.Answer correctAnswer
         ) = game.getPoolDetails(poolId);
 
         console.log("Pool Details:");
-        console.log("ROI Yes:", roiYes);
-        console.log("ROI No:", roiNo);
         console.log("Total Amount:", totalAmount);
         console.log("Deadline:", deadline);
         console.log("Correct Answer (enum):", uint(correctAnswer));

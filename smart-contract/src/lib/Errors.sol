@@ -1,4 +1,4 @@
-
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
 library Errors {
@@ -12,4 +12,5 @@ library Errors {
     error ResultAlreadySet();
     error AnswerNotSet();
     error NoFundsInPool();
+    error AlreadyPredicted();
 }

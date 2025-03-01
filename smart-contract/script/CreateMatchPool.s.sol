@@ -13,7 +13,7 @@ contract CreateMatchPoolScript is Script {
         uint roiNo = 80;
         uint deadlineInDays = 5; // days until deadline
 
-        game.createMatchPool(roiYes, roiNo, deadlineInDays);
+        game.createMatchPool(deadlineInDays);
         console.log("Match pool created");
         console.log("ROI Yes:", roiYes);
         console.log("ROI No:", roiNo);
