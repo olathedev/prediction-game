@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 import "../src/Game.sol";
 
 contract GetPoolDetailsScript is Script {
-    function run() external {
+    function run() external view {
         Game game = Game(vm.envAddress("GAME_ADDRESS"));
         uint poolId = 1;
         (
