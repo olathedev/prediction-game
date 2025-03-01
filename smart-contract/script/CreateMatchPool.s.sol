@@ -8,7 +8,6 @@ contract CreateMatchPoolScript is Script {
     function run() external {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(privateKey);
-
         Game game = Game(vm.envAddress("GAME_ADDRESS"));
         uint roiYes = 120;
         uint roiNo = 80;
