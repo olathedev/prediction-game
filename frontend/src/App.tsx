@@ -1,19 +1,16 @@
 // import Body from "./components/Body"
 
 import { Route, Routes } from "react-router-dom"
-import Admin from "./components/Admin"
-import Body from "./components/Body"
+import AdminPage from "./pages/admin"
+import HomePage from "./pages/home"
 
 function App() {
   return (
     <main className="min-h-screen max-w-3xl mx-auto h-screen p-4">
-
       <Routes>
-        <Route path="/" element={<Body />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
-      {/* <Body /> */}
-      {/* <Admin /> */}
     </main>
   )
 }
