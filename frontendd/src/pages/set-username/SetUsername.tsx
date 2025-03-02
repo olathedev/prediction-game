@@ -2,15 +2,27 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
+import { useWriteContract } from "wagmi";
+import rawAbi from "../../abi/Game.json";
+
+const abi = rawAbi.abi;
 
 const Username = () => {
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
+  const { data: hash, isPending, writeContract } = useWriteContract();
+
   const handleSubmit = () => {
     if (username.trim()) {
+      writeContract({
+        address: "0x994AB27b19223257bA5CdEd057fD03a2C0650BAC",
+        abi,
+        functionName: "setUsername",
+        args: [username],
+      });
       // Save username and navigate
-      navigate("/game");
+      // navigate("/game");
     }
   };
 
@@ -22,7 +34,6 @@ const Username = () => {
       className="-mt-20 flex h-svh items-center justify-center"
     >
       <div className="bg-custom-gradient relative flex h-[29rem] w-[22rem] md:h-[32rem] md:w-[40rem] flex-col items-center justify-center gap-[3rem] rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF]">
-        
         <h2 className="text-3xl font-bold text-white">Enter Your Username</h2>
 
         {/* Animated Input */}
@@ -48,8 +59,16 @@ const Username = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex gap-4"
         >
-          <Button name="Start Game" onClick={handleSubmit} className="uppercase" />
-          <Button name="Go Back" onClick={() => navigate("/")} className="uppercase bg-opacity-20" />
+          <Button
+            name={isPending ? "Loadng..." : "Start Game"}
+            onClick={handleSubmit}
+            className="uppercase"
+          />
+          <Button
+            name="Go Back"
+            onClick={() => navigate("/")}
+            className="uppercase bg-opacity-20"
+          />
         </motion.div>
       </div>
     </motion.section>
