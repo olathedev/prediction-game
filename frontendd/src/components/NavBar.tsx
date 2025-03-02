@@ -1,5 +1,5 @@
 import Button from "./Button";
-import ConnectButton from "./ConnectButton";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const NavBar = () => {
   return (
@@ -11,21 +11,17 @@ const NavBar = () => {
 
       <div className="flex items-center text-lg gap-4">
         <div className="flex items-center space-x-6">
+          <p className="text-xl">@Username</p>
 
-        <p className="text-xl">@Username</p>
+          <div className="inline-flex items-center gap-2">
+            <img src="/images/coin.png" className="h-5" />
+            <span className="text-xl">20</span>
+          </div>
 
-        <div className="inline-flex items-center gap-2">
-          <img src="/images/coin.png" className="h-5" />
-
-          <span className="text-xl">20</span>
+          {/* <Button name="Connect" />
+           */}
+          <ConnectButton />
         </div>
-
-
-        <Button name="Connect" />
-        </div>
-
-
-
       </div>
     </div>
   );
