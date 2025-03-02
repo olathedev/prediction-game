@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./pages/Home/Home";
 import Username from "./pages/set-username/SetUsername";
 import Game from "./pages/game/Game";
+import NavBar from "./components/NavBar";
 
 function App() {
   const router = createBrowserRouter([
@@ -12,6 +13,7 @@ function App() {
   ]);
   return (
     <>
+      <NavBar />
       <RouterProvider router={router} />
     </>
   );

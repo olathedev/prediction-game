@@ -33,7 +33,7 @@ body {
 }
 @media screen and (max-width: 480px) {
   body {
-    /* background-image: url("/images/background-mobile.svg"); */
+    background-image: url("/images/background-mobile.svg");
     background: linear-gradient(to bottom, #1e3c72, #2a5298);
     background-size: cover;
     background-attachment: fixed;
