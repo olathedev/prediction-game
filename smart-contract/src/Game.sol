@@ -68,9 +68,9 @@ contract PredictionGame {
         uint256 duration,
         uint256 resolutionWindow
     ) external onlyOwner {
-        require(bytes(text).length > 0, "Question text required");
-        require(duration > 0, "Duration must be positive");
-        require(resolutionWindow > 0, "Resolution window must be positive");
+         if (bytes(text).length == 0) revert Errors.EmptyQuestionText();
+        if (duration == 0) revert Errors.InvalidDuration();
+        if (resolutionWindow == 0) revert Errors.InvalidResolutionWindow();
         
         Question storage q = questions[currentQuestionId];
         q.text = text;
@@ -84,11 +84,11 @@ contract PredictionGame {
     }
 
     function predict(uint256 questionId, uint256 answer) external payable validQuestion(questionId) {
-        Question storage q = questions[questionId];
-        require(block.timestamp < q.deadline, "Prediction period ended");
-        require(answer > 0 && answer <= MAX_OPTIONS, "Invalid answer");
-        require(q.answers[msg.sender] == 0, "Already predicted");
-        require(msg.value > 0, "Stake required");
+               Question storage q = questions[questionId];
+        if (block.timestamp >= q.deadline) revert Errors.PredictionPeriodEnded();
+        if (answer == 0 || answer > MAX_OPTIONS) revert Errors.InvalidAnswer();
+        if (q.answers[msg.sender] != 0) revert Errors.AlreadyPredicted();
+        if (msg.value == 0) revert Errors.InvalidStake();
 
         if (players[msg.sender].playerAddress == address(0)) {
             players[msg.sender].playerAddress = msg.sender;
@@ -104,11 +104,11 @@ contract PredictionGame {
     }
 
     function resolveQuestion(uint256 questionId, uint256 correctAnswer) external onlyOwner validQuestion(questionId) {
-        Question storage q = questions[questionId];
-        require(block.timestamp >= q.deadline, "Deadline not reached");
-        require(block.timestamp <= q.resolveBy, "Resolution window expired");
-        require(!q.resolved, "Already resolved");
-        require(correctAnswer > 0 && correctAnswer <= MAX_OPTIONS, "Invalid correct answer");
+     Question storage q = questions[questionId];
+        if (block.timestamp < q.deadline) revert Errors.DeadlineNotReached();
+        if (block.timestamp > q.resolveBy) revert Errors.ResolutionWindowExpired();
+        if (q.resolved) revert Errors.ResultAlreadySet();
+        if (correctAnswer == 0 || correctAnswer > MAX_OPTIONS) revert Errors.InvalidAnswer();
 
         q.correctAnswer = correctAnswer;
         q.resolved = true;
