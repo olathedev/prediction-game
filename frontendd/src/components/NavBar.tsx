@@ -10,9 +10,9 @@ const NavBar = () => {
       </div>
 
       <div className="flex items-center text-lg gap-4">
-        <div className="flex space-x-6">
+        <div className="flex items-center space-x-6">
 
-        <p>@Username</p>
+        <p className="text-xl">@Username</p>
 
         <div className="inline-flex items-center gap-2">
           <img src="/images/coin.png" className="h-5" />
