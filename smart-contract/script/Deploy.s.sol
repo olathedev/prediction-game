@@ -9,7 +9,7 @@ contract DeployScript is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        Game game = new Game();
+        PredictionGame game = new PredictionGame();
         console.log("Game deployed at:", address(game));
 
         vm.stopBroadcast();

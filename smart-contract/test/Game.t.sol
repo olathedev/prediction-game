@@ -4,106 +4,108 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 import "../src/Game.sol";
 
-contract GameTest is Test {
-    Game game;
-    address owner = address(this);
-    address alice = address(0x1);
-    address bob = address(0x2);
+contract PredictionGameTest is Test {
+    PredictionGame game;
+    address owner = address(this); // Set test contract as owner
+    address player1 = address(0x1);
+    address player2 = address(0x2);
+
+    event UsernameSet(address indexed player, string username);
+    event QuestionCreated(
+        uint256 indexed questionId,
+        string text,
+        uint256 duration,
+        uint256 resolutionWindow,
+        uint256 timeLimit
+    );
+    event PredictionSubmitted(
+        address indexed player,
+        uint256 indexed questionId,
+        uint256 answer,
+        uint256 stake
+    );
+    event QuestionResolved(uint256 indexed questionId, uint256 correctAnswer);
+    event RewardDistributed(address indexed player, uint256 reward);
 
     function setUp() public {
-        game = new Game();
-        vm.deal(alice, 100 ether);
-        vm.deal(bob, 100 ether);
+        game = new PredictionGame();
     }
 
-    function testCreatePlayer() public {
-        vm.prank(alice);
-        game.createPlayer("Alice");
-        Game.Player memory playerAlice = game.getPlayerDetails(alice);
-        assertEq(playerAlice.totalPoints, 0);
-        assertEq(playerAlice.correctPredictions, 0);
-        assertEq(playerAlice.totalPredictions, 0);
-        assertEq(keccak256(bytes(playerAlice.username)), keccak256(bytes("Alice")));
+    function testSetUsername() public {
+        vm.prank(player1);
+        vm.expectEmit(true, false, false, true);
+        emit UsernameSet(player1, "Alice");
+        game.setUsername("Alice");
+
+        vm.prank(player2);
+        vm.expectEmit(true, false, false, true);
+        emit UsernameSet(player2, "Bob");
+        game.setUsername("Bob");
+
+        PredictionGame.Player memory p1 = game.getPlayerDetails(player1);
+        PredictionGame.Player memory p2 = game.getPlayerDetails(player2);
+
+        console.log("Player 1 Username: %s", p1.username);
+        console.log("Player 2 Username: %s", p2.username);
     }
 
-    function testCreateMatchPool() public {
-        game.createMatchPool(1);
-        (uint totalAmount, uint deadline, Game.Answer correctAnswer) = game.getPoolDetails(1);
-        assertEq(totalAmount, 0);
-        assertTrue(deadline > block.timestamp);
-        assertEq(uint(correctAnswer), uint(Game.Answer.None));
+    function testCreateQuestion() public {
+        string[4] memory options = ["A", "B", "C", "D"];
+        uint256 duration = 1; // 1 hour
+        uint256 resolutionWindow = 1; // 1 hour
+        uint256 timeLimit = 10 minutes;
+
+        vm.expectEmit(true, false, false, true);
+        emit QuestionCreated(1, "What is Solidity?", duration, resolutionWindow, timeLimit);
+
+        game.createQuestion("What is Solidity?", options, duration, resolutionWindow, timeLimit);
+
+        (string memory text, , , , , , , ) = game.questions(1);
+        console.log("Question 1: %s", text);
     }
 
-    function testPredictAndAlreadyPredicted() public {
-        game.createMatchPool(1);
-        vm.prank(alice);
-        game.createPlayer("Alice");
-        vm.prank(alice);
-        game.predict{value: 1 ether}(1, Game.Answer.Yes);
-        vm.prank(alice);
-        vm.expectRevert();
-        game.predict{value: 1 ether}(1, Game.Answer.No);
+    function testPredict() public {
+        string[4] memory options = ["A", "B", "C", "D"];
+        game.createQuestion("What is Solidity?", options, 1, 1, 10 minutes);
+
+        vm.prank(player1);
+        vm.deal(player1, 1 ether);
+        vm.expectEmit(true, false, false, true);
+        emit PredictionSubmitted(player1, 1, 2, 1 ether);
+        game.predict{value: 1 ether}(1, 2);
+
+        vm.prank(player2);
+        vm.deal(player2, 1 ether);
+        vm.expectEmit(true, false, false, true);
+        emit PredictionSubmitted(player2, 1, 3, 1 ether);
+        game.predict{value: 1 ether}(1, 3);
+
+        (,,,,, uint256 totalStakes,,) = game.questions(1);
+        console.log("Total stakes: %d wei", totalStakes);
     }
 
-    function testInvalidStake() public {
-        game.createMatchPool(1);
-        vm.prank(alice);
-        game.createPlayer("Alice");
-        vm.prank(alice);
-        vm.expectRevert();
-        game.predict{value: 0}(1, Game.Answer.Yes);
-    }
+    function testResolveQuestion() public {
+        string[4] memory options = ["A", "B", "C", "D"];
+        game.createQuestion("What is Solidity?", options, 1, 1, 10 minutes);
 
-    function testPredictAfterDeadline() public {
-        game.createMatchPool(1);
-        vm.prank(alice);
-        game.createPlayer("Alice");
-        vm.prank(alice);
-        game.predict{value: 1 ether}(1, Game.Answer.Yes);
-        ( , uint deadline, ) = game.getPoolDetails(1);
-        vm.warp(deadline + 1);
-        vm.prank(bob);
-        vm.expectRevert();
-        game.predict{value: 1 ether}(1, Game.Answer.No);
-    }
+        vm.prank(player1);
+        vm.deal(player1, 1 ether);
+        game.predict{value: 1 ether}(1, 2);
 
-    function testUpdateCorrectAnswerAndDistributeRewards() public {
-        game.createMatchPool(1);
-        vm.prank(alice);
-        game.createPlayer("Alice");
-        vm.prank(bob);
-        game.createPlayer("Bob");
-        vm.prank(alice);
-        game.predict{value: 2 ether}(1, Game.Answer.Yes);
-        vm.prank(bob);
-        game.predict{value: 1 ether}(1, Game.Answer.No);
-        game.updateCorrectAnswer(1, Game.Answer.Yes);
-        game.distributeRewards(1);
-        Game.Player memory alicePlayer = game.getPlayerDetails(alice);
-        Game.Player memory bobPlayer = game.getPlayerDetails(bob);
-        uint expectedBonusAlice = (2 ether * (3 ether * 500)) / (3 ether);
-        uint expectedBonusBob = 0;
-        assertEq(alicePlayer.totalPoints, expectedBonusAlice);
-        assertEq(bobPlayer.totalPoints, expectedBonusBob);
-    }
+        vm.prank(player2);
+        vm.deal(player2, 1 ether);
+        game.predict{value: 1 ether}(1, 3);
 
-    function testRewardDistribution() public {
-        game.createMatchPool(1);
-        vm.prank(alice);
-        game.createPlayer("Alice");
-        vm.prank(bob);
-        game.createPlayer("Bob");
-        vm.prank(alice);
-        game.predict{value: 2 ether}(1, Game.Answer.Yes);
-        vm.prank(bob);
-        game.predict{value: 1 ether}(1, Game.Answer.Yes);
-        game.updateCorrectAnswer(1, Game.Answer.Yes);
-        game.distributeRewards(1);
-        Game.Player memory alicePlayer = game.getPlayerDetails(alice);
-        Game.Player memory bobPlayer = game.getPlayerDetails(bob);
-        uint expectedBonusAlice = (2 ether * (3 ether * 500)) / (3 ether);
-        uint expectedBonusBob = (1 ether * (3 ether * 500)) / (3 ether);
-        assertEq(alicePlayer.totalPoints, expectedBonusAlice);
-        assertEq(bobPlayer.totalPoints, expectedBonusBob);
+        vm.warp(block.timestamp + 2 hours); // Simulate time passing
+
+        vm.expectEmit(true, false, false, true);
+        emit QuestionResolved(1, 2);
+        game.resolveQuestion(1, 2);
+
+        PredictionGame.Player memory p1 = game.getPlayerDetails(player1);
+        PredictionGame.Player memory p2 = game.getPlayerDetails(player2);
+
+        console.log("Player 1 Points: %d", p1.totalPoints);
+        console.log("Player 2 Points: %d", p2.totalPoints);
     }
 }

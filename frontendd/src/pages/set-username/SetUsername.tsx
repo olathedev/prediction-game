@@ -1,28 +1,58 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
-import { useWriteContract } from "wagmi";
+import { useWriteContract, useAccount, BaseError } from "wagmi";
 import rawAbi from "../../abi/Game.json";
 
 const abi = rawAbi.abi;
 
 const Username = () => {
   const [username, setUsername] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [transactionStatus, setTransactionStatus] = useState<string | null>(
+    null
+  );
   const navigate = useNavigate();
+  const { isConnected } = useAccount();
+  const { data: hash, isPending, writeContract, error } = useWriteContract();
 
-  const { data: hash, isPending, writeContract } = useWriteContract();
+  useEffect(() => {
+    if (hash) {
+      setTransactionStatus("Transaction successful!");
+      setTimeout(() => {
+        navigate("/game");
+      }, 2000);
+    }
+    if (error) {
+      setErrorMessage(error.message ?? "Transaction failed. Please try again.");
+    }
+  }, [hash, navigate, error]);
 
-  const handleSubmit = () => {
-    if (username.trim()) {
-      writeContract({
-        address: "0x994AB27b19223257bA5CdEd057fD03a2C0650BAC",
+  const handleSubmit = async() => {
+    if (!isConnected) {
+      setErrorMessage("Please connect your wallet first.");
+      return;
+    }
+    if (!username.trim()) {
+      setErrorMessage("Username cannot be empty.");
+      return;
+    }
+
+    setTransactionStatus(null);
+    setErrorMessage("");
+
+    try {
+      await writeContract({
+        address: "0x9cb3D742b89a2b363f84417120AADe481207c0F2",
         abi,
         functionName: "setUsername",
         args: [username],
       });
-      // Save username and navigate
-      // navigate("/game");
+    } catch (err: unknown) {
+      if (err instanceof BaseError) {
+        setErrorMessage(err.shortMessage || err.message);
+      }
     }
   };
 
@@ -52,6 +82,28 @@ const Username = () => {
           />
         </motion.div>
 
+        {/* Error Message */}
+        {errorMessage && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-red-500 text-sm"
+          >
+            {errorMessage}
+          </motion.p>
+        )}
+
+        {/* Transaction Status */}
+        {transactionStatus && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-green-400 text-sm"
+          >
+            {transactionStatus}
+          </motion.p>
+        )}
+
         {/* Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -60,7 +112,7 @@ const Username = () => {
           className="flex gap-4"
         >
           <Button
-            name={isPending ? "Loadng..." : "Start Game"}
+            name={isPending ? "Processing..." : "Start Game"}
             onClick={handleSubmit}
             className="uppercase"
           />

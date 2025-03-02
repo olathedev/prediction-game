@@ -1,4 +1,3 @@
-import Button from "./Button";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const NavBar = () => {
