@@ -19,5 +19,5 @@ library Errors {
     error InvalidCorrectAnswer();
     error CoreTransferFailed();
     error NotStaked();
-error AlreadyStaked();
+    error AlreadyStaked();
 }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import "./lib/Events.sol";
 import "./lib/Errors.sol";
 
-contract PredictionGame {
+contract Game {
     // State Variables
     address public owner;
     uint256 public constant QUESTIONS_PER_GAME = 10;
