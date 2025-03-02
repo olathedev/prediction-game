@@ -5,36 +5,51 @@ import "./lib/Errors.sol";
 import "./lib/Events.sol";
 import "./ContextMixin.sol";
 
-contract Game {
-    uint constant BONUS_MULTIPLIER = 500;
+contract PredictionGame {
+    address public owner;
+    uint256 public constant QUESTIONS_PER_GAME = 10;
+    uint256 public constant MAX_OPTIONS = 4;
 
     struct Player {
         address playerAddress;
         string username;
         uint256 totalPoints;
-        uint256 correctPredictions;
-        uint256 totalPredictions;
+        uint256 totalCorrect;
+        uint256 currentStreak;
+        Prediction[] predictionHistory;
     }
 
-    mapping(address => Player) public players;
-    address public owner;
-
-    enum Answer { None, Yes, No }
-
-    struct PredictPool {
-        uint totalAmount;
-        uint deadline;
-        Answer correctAnswer;
-        mapping(address => uint) stakes;
-        mapping(address => Answer) answer;
+    struct Question {
+        string text;
+        string[MAX_OPTIONS] options;
+        uint256 correctAnswer;
+        uint256 createdAt;
+        uint256 deadline;
+        uint256 resolveBy;
+        bool resolved;
+        uint256 totalStakes;
+        mapping(address => uint256) stakes;
+        mapping(address => uint256) answers;
         address[] participants;
     }
 
-    uint public totalPools;
-    mapping(uint => PredictPool) public matchPools;
+    struct Prediction {
+        uint256 questionId;
+        uint256 answer;
+        bool correct;
+        uint256 timestamp;
+    }
+
+    mapping(uint256 => Question) public questions;
+    mapping(address => Player) public players;
+    address[] public allPlayers;
+    uint256 public currentQuestionId;
+    address[] public leaderboard;
+    uint256 public lastLeaderboardUpdate;
 
     constructor() {
         owner = msg.sender;
+        currentQuestionId = 1;
     }
 
     modifier onlyOwner() {
@@ -42,115 +57,162 @@ contract Game {
         _;
     }
 
-    modifier onlyPlayer() {
-        require(
-            players[msg.sender].playerAddress == msg.sender,
-            "Game: only player can call this function"
-        );
+    modifier validQuestion(uint256 questionId) {
+        require(questionId > 0 && questionId <= currentQuestionId, "Invalid question ID");
         _;
     }
 
-    function createMatchPool(uint _deadline) external onlyOwner {
-        if (_deadline <= 0) {
-            revert Errors.InvalidDeadline();
-        }
-        uint deadline = block.timestamp + (_deadline * 1 days);
-        totalPools++;
-        PredictPool storage pool = matchPools[totalPools];
-        pool.deadline = deadline;
-        pool.correctAnswer = Answer.None;
-        pool.totalAmount = 0;
-        emit Events.MatchCreated(totalPools, deadline);
+    function createQuestion(
+        string memory text,
+        string[MAX_OPTIONS] memory options,
+        uint256 duration,
+        uint256 resolutionWindow
+    ) external onlyOwner {
+         if (bytes(text).length == 0) revert Errors.EmptyQuestionText();
+        if (duration == 0) revert Errors.InvalidDuration();
+        if (resolutionWindow == 0) revert Errors.InvalidResolutionWindow();
+        
+        Question storage q = questions[currentQuestionId];
+        q.text = text;
+        q.options = options;
+        q.createdAt = block.timestamp;
+        q.deadline = block.timestamp + (duration * 1 hours);
+        q.resolveBy = q.deadline + (resolutionWindow * 1 hours);
+        
+        emit Events.QuestionCreated(currentQuestionId, text, duration, resolutionWindow);
+        currentQuestionId++;
     }
 
-    function createPlayer(string memory _username) external {
-        if (bytes(_username).length == 0) {
-            revert Errors.UsernameCannotBeEmpty();
+    function predict(uint256 questionId, uint256 answer) external payable validQuestion(questionId) {
+               Question storage q = questions[questionId];
+        if (block.timestamp >= q.deadline) revert Errors.PredictionPeriodEnded();
+        if (answer == 0 || answer > MAX_OPTIONS) revert Errors.InvalidAnswer();
+        if (q.answers[msg.sender] != 0) revert Errors.AlreadyPredicted();
+        if (msg.value == 0) revert Errors.InvalidStake();
+
+        if (players[msg.sender].playerAddress == address(0)) {
+            players[msg.sender].playerAddress = msg.sender;
+            allPlayers.push(msg.sender);
         }
-        players[msg.sender] = Player({
-            playerAddress: msg.sender,
-            username: _username,
-            totalPoints: 0,
-            correctPredictions: 0,
-            totalPredictions: 0
-        });
-        emit Events.PlayerRegistered(msg.sender, _username);
+
+        q.answers[msg.sender] = answer;
+        q.stakes[msg.sender] = msg.value;
+        q.totalStakes += msg.value;
+        q.participants.push(msg.sender);
+
+        emit Events.PredictionSubmitted(msg.sender, questionId, answer);
     }
 
-    function predict(uint _poolId, Answer _answer) external payable onlyPlayer {
-        if (_poolId == 0 || _poolId > totalPools) {
-            revert Errors.InvalidPoolId();
-        }
-        PredictPool storage pool = matchPools[_poolId];
-        if (block.timestamp > pool.deadline) {
-            revert Errors.InvalidDeadline();
-        }
-        if (_answer == Answer.None) {
-            revert Errors.InvalidAnswer();
-        }
-        if (msg.value == 0) {
-            revert Errors.InvalidStake();
-        }
-        if (pool.answer[msg.sender] != Answer.None) {
-            revert Errors.AlreadyPredicted();
-        }
-        pool.stakes[msg.sender] = msg.value;
-        pool.answer[msg.sender] = _answer;
-        pool.totalAmount += msg.value;
-        pool.participants.push(msg.sender);
-        players[msg.sender].totalPredictions++;
+    function resolveQuestion(uint256 questionId, uint256 correctAnswer) external onlyOwner validQuestion(questionId) {
+     Question storage q = questions[questionId];
+        if (block.timestamp < q.deadline) revert Errors.DeadlineNotReached();
+        if (block.timestamp > q.resolveBy) revert Errors.ResolutionWindowExpired();
+        if (q.resolved) revert Errors.ResultAlreadySet();
+        if (correctAnswer == 0 || correctAnswer > MAX_OPTIONS) revert Errors.InvalidAnswer();
+
+        q.correctAnswer = correctAnswer;
+        q.resolved = true;
+
+        _updateScores(questionId);
+        _updateLeaderboard();
+
+        emit Events.QuestionResolved(questionId, correctAnswer);
     }
 
-    function getPlayerDetails(address _playerAddress) external view returns (Player memory) {
-        return players[_playerAddress];
+    function getPlayerDetails(address playerAddress) public view returns (Player memory) {
+        return players[playerAddress];
     }
 
-    function updateCorrectAnswer(uint _poolId, Answer _answer) external onlyOwner {
-        if (_poolId == 0 || _poolId > totalPools) {
-            revert Errors.InvalidPoolId();
+    function getLeaderboard() public view returns (address[] memory, uint256[] memory) {
+        address[] memory sorted = new address[](leaderboard.length);
+        uint256[] memory scores = new uint256[](leaderboard.length);
+        
+        for (uint i = 0; i < leaderboard.length; i++) {
+            sorted[i] = leaderboard[i];
+            scores[i] = players[leaderboard[i]].totalPoints;
         }
-        PredictPool storage pool = matchPools[_poolId];
-        if (_answer == Answer.None) {
-            revert Errors.InvalidAnswer();
-        }
-        pool.correctAnswer = _answer;
-        emit Events.AnswerSet(_poolId, uint(_answer));
+        
+        return (sorted, scores);
     }
 
-    function distributeRewards(uint _poolId) external onlyOwner {
-        if (_poolId == 0 || _poolId > totalPools) {
-            revert Errors.InvalidPoolId();
+    function _updateScores(uint256 questionId) internal {
+        Question storage q = questions[questionId];
+        uint256 totalCorrect;
+        uint256 totalCorrectStakes;
+
+        for (uint i = 0; i < q.participants.length; i++) {
+            address participant = q.participants[i];
+            if (q.answers[participant] == q.correctAnswer) {
+                totalCorrect++;
+                totalCorrectStakes += q.stakes[participant];
+            }
         }
-        PredictPool storage pool = matchPools[_poolId];
-        if (pool.correctAnswer == Answer.None) {
-            revert Errors.AnswerNotSet();
-        }
-        if (pool.totalAmount == 0) {
-            revert Errors.NoFundsInPool();
-        }
-        uint bonusPool = pool.totalAmount * BONUS_MULTIPLIER;
-        for (uint i = 0; i < pool.participants.length; i++) {
-            address participant = pool.participants[i];
-            uint stake = pool.stakes[participant];
-            (bool sent, ) = payable(participant).call{value: stake}("");
-            require(sent, "Transfer failed");
-            if (pool.answer[participant] == pool.correctAnswer) {
-                uint bonusPoints = (stake * bonusPool) / pool.totalAmount;
-                players[participant].totalPoints += bonusPoints;
-                players[participant].correctPredictions++;
+
+        if (totalCorrect == 0) return;
+
+        for (uint i = 0; i < q.participants.length; i++) {
+            address participant = q.participants[i];
+            
+            if (q.answers[participant] == q.correctAnswer) {
+                Player storage p = players[participant];
+                uint256 stake = q.stakes[participant];
+                uint256 reward = (stake * q.totalStakes) / totalCorrectStakes;
+
+                p.totalCorrect++;
+                p.currentStreak++;
+                p.totalPoints += reward;
+                p.predictionHistory.push(Prediction({
+                    questionId: questionId,
+                    answer: q.answers[participant],
+                    correct: true,
+                    timestamp: block.timestamp
+                }));
+
+                payable(participant).transfer(reward);
+            } else {
+                players[participant].currentStreak = 0;
+                players[participant].predictionHistory.push(Prediction({
+                    questionId: questionId,
+                    answer: q.answers[participant],
+                    correct: false,
+                    timestamp: block.timestamp
+                }));
             }
         }
     }
 
-    function getPoolDetails(uint _poolId)
-        external
-        view
-        returns (uint totalAmount, uint deadline, Answer correctAnswer)
-    {
-        if (_poolId == 0 || _poolId > totalPools) {
-            revert Errors.InvalidPoolId();
+    function _updateLeaderboard() internal {
+        for (uint i = 0; i < allPlayers.length; i++) {
+            for (uint j = i+1; j < allPlayers.length; j++) {
+                if (players[allPlayers[i]].totalPoints < players[allPlayers[j]].totalPoints) {
+                    address temp = allPlayers[i];
+                    allPlayers[i] = allPlayers[j];
+                    allPlayers[j] = temp;
+                }
+            }
         }
-        PredictPool storage pool = matchPools[_poolId];
-        return (pool.totalAmount, pool.deadline, pool.correctAnswer);
+        
+        if (allPlayers.length > 100) {
+            for (uint i = 100; i < allPlayers.length; i++) {
+                delete allPlayers[i];
+            }
+        }
+        
+        leaderboard = allPlayers;
+        lastLeaderboardUpdate = block.timestamp;
+    }
+
+    function getQuestionDetails(uint256 questionId) public view validQuestion(questionId) 
+        returns (
+            string memory text,
+            string[MAX_OPTIONS] memory options,
+            uint256 deadline,
+            uint256 resolveBy,
+            uint256 totalStakes,
+            bool resolved
+        )
+    {
+        Question storage q = questions[questionId];
+        return (q.text, q.options, q.deadline, q.resolveBy, q.totalStakes, q.resolved);
     }
 }
