@@ -2,21 +2,20 @@
 pragma solidity ^0.8.13;
 
 library Errors {
-    error NotOwner();
-    error EmptyQuestionText();
-    error InvalidDuration();
-    error InvalidResolutionWindow();
+    error OnlyOwner();
+    error InvalidQuestionID();
+    error UsernameEmpty();
+    error UsernameTaken();
+    error MaxQuestionsReached();
+    error TimeLimitInvalid();
     error PredictionPeriodEnded();
-    error ResolutionWindowExpired();
-    error UsernameCannotBeEmpty();
-    error InvalidRoi();
-    error InvalidDeadline();
+    error TimeLimitExpired();
     error InvalidAnswer();
-    error InvalidStake();
-    error InvalidPoolId();
-    error DeadlineNotReached();
-    error ResultAlreadySet();
-    error AnswerNotSet();
-    error NoFundsInPool();
     error AlreadyPredicted();
+    error InvalidStakeAmount();
+    error DeadlineNotReached();
+    error ResolutionWindowExpired();
+    error ResultAlreadySet();
+    error InvalidCorrectAnswer();
+    error CoreTransferFailed();
 }
