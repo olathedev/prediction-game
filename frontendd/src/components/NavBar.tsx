@@ -1,3 +1,6 @@
+import Button from "./Button";
+import ConnectButton from "./ConnectButton";
+
 const NavBar = () => {
   return (
     <div className="container flex items-center justify-between md:mx-auto my-6 bg-[#2463FF]/40 py-2 px-6 rounded-full">
@@ -6,10 +9,23 @@ const NavBar = () => {
         <p>LeaderBoard</p>
       </div>
 
-      <div className="flex text-lg">
+      <div className="flex items-center text-lg gap-4">
+        <div className="flex space-x-6">
+
         <p>@Username</p>
 
-        
+        <div className="inline-flex items-center gap-2">
+          <img src="/images/coin.png" className="h-5" />
+
+          <span className="text-xl">20</span>
+        </div>
+
+
+        <Button name="Connect" />
+        </div>
+
+
+
       </div>
     </div>
   );
