@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import "./lib/Events.sol";
 import "./lib/Errors.sol";
 
-contract PredictionGame {
+contract Game {
     // State Variables
     address public owner;
     uint256 public constant QUESTIONS_PER_GAME = 10;
@@ -31,8 +31,6 @@ contract PredictionGame {
         uint256 resolveBy;
         uint256 timeLimit;
         bool resolved;
-        uint256 totalStakes;
-        mapping(address => uint256) stakes;
         mapping(address => uint256) answers;
         address[] participants;
     }
@@ -46,6 +44,8 @@ contract PredictionGame {
 
     mapping(uint256 => Question) public questions;
     mapping(address => Player) public players;
+    mapping(address => bool) public hasStakedForCurrentSet; // Tracks if a player has staked for the current set of 10 questions
+    mapping(uint256 => uint256) public stakingAmountPerSet; // Tracks the staking amount for each set of 10 questions
     address[] public allPlayers;
     uint256 public currentQuestionId;
     address[] public leaderboard;
@@ -93,6 +93,13 @@ contract PredictionGame {
         emit Events.UsernameSet(msg.sender, _username);
     }
 
+    // Function to set staking amount for the current set of 10 questions
+    function setStakingAmount(uint256 amount) external onlyOwner {
+        uint256 currentSet = (currentQuestionId - 1) / QUESTIONS_PER_GAME + 1;
+        stakingAmountPerSet[currentSet] = amount;
+        emit Events.StakingAmountSet(currentSet, amount);
+    }
+
     // Function to create a question (called by backend)
     function createQuestion(
         string memory text,
@@ -104,6 +111,13 @@ contract PredictionGame {
         if (currentQuestionId > QUESTIONS_PER_GAME)
             revert Errors.MaxQuestionsReached();
         if (timeLimit == 0) revert Errors.TimeLimitInvalid();
+
+        // Reset staking status for all players when a new set of 10 questions begins
+        if (currentQuestionId % QUESTIONS_PER_GAME == 1) {
+            for (uint i = 0; i < allPlayers.length; i++) {
+                hasStakedForCurrentSet[allPlayers[i]] = false;
+            }
+        }
 
         Question storage q = questions[currentQuestionId];
         q.text = text;
@@ -123,19 +137,12 @@ contract PredictionGame {
         currentQuestionId++;
     }
 
-    // Function to predict (stake CORE tokens)
-    function predict(
-        uint256 questionId,
-        uint256 answer
-    ) external payable validQuestion(questionId) {
-        Question storage q = questions[questionId];
-        if (block.timestamp >= q.deadline)
-            revert Errors.PredictionPeriodEnded();
-        if (block.timestamp > q.createdAt + q.timeLimit)
-            revert Errors.TimeLimitExpired();
-        if (answer == 0 || answer > MAX_OPTIONS) revert Errors.InvalidAnswer();
-        if (q.answers[msg.sender] != 0) revert Errors.AlreadyPredicted();
-        if (msg.value == 0) revert Errors.InvalidStakeAmount();
+    // Function to stake CORE tokens for the current set of 10 questions
+    function stakeForQuestions() external payable {
+        uint256 currentSet = (currentQuestionId - 1) / QUESTIONS_PER_GAME + 1;
+        uint256 requiredStake = stakingAmountPerSet[currentSet];
+        if (msg.value != requiredStake) revert Errors.InvalidStakeAmount();
+        if (hasStakedForCurrentSet[msg.sender]) revert Errors.AlreadyStaked();
 
         // Register player if new
         if (players[msg.sender].playerAddress == address(0)) {
@@ -143,18 +150,30 @@ contract PredictionGame {
             allPlayers.push(msg.sender);
         }
 
+        // Mark player as staked for the current set of 10 questions
+        hasStakedForCurrentSet[msg.sender] = true;
+        emit Events.StakedForQuestions(msg.sender, msg.value);
+    }
+
+    // Function to predict (no staking required here, as staking is done upfront)
+    function predict(
+        uint256 questionId,
+        uint256 answer
+    ) external validQuestion(questionId) {
+        Question storage q = questions[questionId];
+        if (block.timestamp >= q.deadline)
+            revert Errors.PredictionPeriodEnded();
+        if (block.timestamp > q.createdAt + q.timeLimit)
+            revert Errors.TimeLimitExpired();
+        if (answer == 0 || answer > MAX_OPTIONS) revert Errors.InvalidAnswer();
+        if (q.answers[msg.sender] != 0) revert Errors.AlreadyPredicted();
+        if (!hasStakedForCurrentSet[msg.sender]) revert Errors.NotStaked();
+
         // Record prediction
         q.answers[msg.sender] = answer;
-        q.stakes[msg.sender] = msg.value;
-        q.totalStakes += msg.value;
         q.participants.push(msg.sender);
 
-        emit Events.PredictionSubmitted(
-            msg.sender,
-            questionId,
-            answer,
-            msg.value
-        );
+        emit Events.PredictionSubmitted(msg.sender, questionId, answer, 0);
     }
 
     // Function to resolve a question (called by backend)
@@ -183,13 +202,11 @@ contract PredictionGame {
     function _updateScores(uint256 questionId) internal {
         Question storage q = questions[questionId];
         uint256 totalCorrect;
-        uint256 totalCorrectStakes;
 
         for (uint i = 0; i < q.participants.length; i++) {
             address participant = q.participants[i];
             if (q.answers[participant] == q.correctAnswer) {
                 totalCorrect++;
-                totalCorrectStakes += q.stakes[participant];
             }
         }
 
@@ -200,9 +217,6 @@ contract PredictionGame {
             Player storage p = players[participant];
 
             if (q.answers[participant] == q.correctAnswer) {
-                uint256 stake = q.stakes[participant];
-                uint256 reward = (stake * q.totalStakes) / totalCorrectStakes;
-
                 p.totalCorrect++;
                 p.currentStreak++;
 
@@ -219,7 +233,6 @@ contract PredictionGame {
                     );
                 }
 
-                p.totalPoints += reward;
                 p.predictionHistory.push(
                     Prediction({
                         questionId: questionId,
@@ -228,11 +241,6 @@ contract PredictionGame {
                         timestamp: block.timestamp
                     })
                 );
-
-                // Transfer reward in CORE tokens
-                (bool success, ) = participant.call{value: reward}("");
-                if (!success) revert Errors.CoreTransferFailed();
-                emit Events.RewardDistributed(participant, reward);
             } else {
                 p.currentStreak = 0;
                 p.predictionHistory.push(

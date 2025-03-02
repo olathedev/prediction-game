@@ -18,4 +18,6 @@ library Errors {
     error ResultAlreadySet();
     error InvalidCorrectAnswer();
     error CoreTransferFailed();
+    error NotStaked();
+    error AlreadyStaked();
 }
