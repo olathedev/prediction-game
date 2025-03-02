@@ -8,5 +8,6 @@ library Events {
     event UsernameSet(address player, string username);
     event StreakReward(address player, uint256 streakLength, uint256 rewardPoints);
     event RewardDistributed(address player, uint256 rewardAmount);
-
+    event StakedForQuestions(address player, uint256 stakeAmount);
+     event StakingAmountSet(uint256 currentSet, uint256 amount);
 }
