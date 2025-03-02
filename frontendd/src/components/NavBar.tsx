@@ -1,31 +1,31 @@
 import Button from "./Button";
-import ConnectButton from "./ConnectButton";
+import { Link } from "react-router-dom";
+// import ConnectButton from "./ConnectButton";
 
 const NavBar = () => {
   return (
     <div className="container flex items-center justify-between md:mx-auto my-6 bg-[#2463FF]/40 py-2 px-6 rounded-full">
       <div className="rounded-[2.5rem]  py-3 flex items-center gap-2 text-xl">
-        <img src="/images/trophy-svgrepo-com.svg" className="h-5" />
-        <p>LeaderBoard</p>
+        <div className="flex gap-2">
+          <img src="/images/trophy-svgrepo-com.svg" className="h-5 self-center" />
+          <Link to="/leaderboard">
+            Leaderboard
+          </Link>
+        </div>
       </div>
 
       <div className="flex items-center text-lg gap-4">
         <div className="flex items-center space-x-6">
+          <p className="text-xl">@Username</p>
 
-        <p className="text-xl">@Username</p>
+          <div className="inline-flex items-center gap-2">
+            <img src="/images/coin.png" className="h-5" />
 
-        <div className="inline-flex items-center gap-2">
-          <img src="/images/coin.png" className="h-5" />
+            <span className="text-xl">20</span>
+          </div>
 
-          <span className="text-xl">20</span>
+          <Button name="Connect" />
         </div>
-
-
-        <Button name="Connect" />
-        </div>
-
-
-
       </div>
     </div>
   );
