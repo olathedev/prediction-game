@@ -1,6 +1,6 @@
 import Button from "./Button";
 import { Link } from "react-router-dom";
-// import ConnectButton from "./ConnectButton";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const NavBar = () => {
   return (
@@ -20,11 +20,10 @@ const NavBar = () => {
 
           <div className="inline-flex items-center gap-2">
             <img src="/images/coin.png" className="h-5" />
-
             <span className="text-xl">20</span>
           </div>
 
-          <Button name="Connect" />
+          <ConnectButton />
         </div>
       </div>
     </div>
