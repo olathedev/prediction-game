@@ -9,7 +9,7 @@ contract GuessGame {
     address public owner;
     uint256 public constant QUESTIONS_PER_GAME = 10;
     uint256 public constant POINTS_PER_CORRECT_ANSWER = 10;
-    uint256 public constant STREAK_REWARD_POINTS = 50;
+    uint256 public constant STREAK_REWARD_POINTS = 50; 
     uint256 public constant STREAK_LENGTH = 3;
     uint256 public currentGameId;
 
