@@ -1,12 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "./Button";
+import { useGame } from "../context/GameContext";
+import { useGuessGame } from "../hooks/use-contract.hook";
+import { useEffect } from "react";
 
 interface GameOverModalProps {
   onClose: () => void;
 }
 
 const GameOverModal = ({ onClose }: GameOverModalProps) => {
+  const { submitPredictions, isPending, transactionStatus } = useGuessGame();
+  const { userAnswers } = useGame();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    submitPredictions(userAnswers, 0.002);
+  };
+
+  useEffect(() => {
+    if (transactionStatus === "success") {
+      navigate("/result");
+    }
+  }, [transactionStatus, navigate]);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -19,9 +36,11 @@ const GameOverModal = ({ onClose }: GameOverModalProps) => {
         <h2 className="text-3xl font-bold text-white">Game Over</h2>
         <p className="text-lg text-gray-300">You've completed 10 questions!</p>
 
-        <Link to="/result" className="w-full">
-          <Button name="View Results" className="uppercase w-full" />
-        </Link>
+          <Button
+            name={isPending ? "Opuehing..." : "View Results"}
+            className="uppercase w-full"
+            onClick={handleClick}
+          />  
         <button
           onClick={onClose}
           className="mt-2 text-gray-300 hover:text-white transition"
