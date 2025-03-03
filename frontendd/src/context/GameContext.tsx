@@ -10,9 +10,9 @@ interface Question {
 interface GameContextType {
   questions: Question[];
   currentQuestionIndex: number;
-  userAnswers: string[];
+  userAnswers: number[];
   gameOver: boolean;
-  nextQuestion: (answer: string) => void;
+  nextQuestion: (answer: number) => void;
   restartGame: () => void;
 }
 
@@ -21,7 +21,7 @@ const GameContext = createContext<GameContextType | null>(null);
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setGameOver(false);
   };
 
-  const nextQuestion = useCallback((answer: string) => {
+  const nextQuestion = useCallback((answer: number) => {
     setUserAnswers((prev) => [...prev, answer]);
     if (currentQuestionIndex < 9) {
       setCurrentQuestionIndex((prev) => prev + 1);
