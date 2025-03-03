@@ -11,9 +11,9 @@ contract RegisterPlayerScript is Script {
         vm.startBroadcast(privateKey);
 
         // Use the deployed contract address from your environment
-        Game game = Game(vm.envAddress("GAME_ADDRESS"));
+        PredictionGame game = PredictionGame(vm.envAddress("GAME_ADDRESS"));
         string memory username = "player123";
-        game.createPlayer(username);
+        game.setUsername(username);
 
         console.log("Player registered with username:", username);
         vm.stopBroadcast();

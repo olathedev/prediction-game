@@ -6,7 +6,7 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum, base, coreDao, sepolia } from "wagmi/chains";
+import { coreDao } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { coreDaoTestnet } from "../utils/Contract";
 
@@ -29,7 +29,6 @@ const CustomRainbowKitProvider = ({ children }: { children: ReactNode }) => {
             fontStack: "system",
             overlayBlur: "small",
             borderRadius: "large",
-            
           })}
         >
           {children}
