@@ -5,6 +5,7 @@ import Game from "./pages/game/Game";
 import NavBar from "./components/NavBar";
 import LeaderBoard from "./pages/leaderboard/LeaderBoard";
 import { Toaster } from "react-hot-toast";
+import Results from "./pages/result/Result";
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route path="/username" element={<Username />} />
         <Route path="/game" element={<Game />} />
         <Route path="/leaderboard" element={<LeaderBoard />} />
+        <Route path="/result" element={<Results />} />
+
         {/* <Route path="*" element={<ErrorPage />} /> */}
       </Routes>
     </>
