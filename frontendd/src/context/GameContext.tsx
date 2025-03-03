@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react";
 import questionsData from "../data/question.json"; // Import your JSON file
 
 interface Question {
@@ -36,20 +36,28 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setGameOver(false);
   };
 
-  const nextQuestion = (answer: string) => {
+  const nextQuestion = useCallback((answer: string) => {
     setUserAnswers((prev) => [...prev, answer]);
     if (currentQuestionIndex < 9) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {
       setGameOver(true);
     }
-  };
+  }, [currentQuestionIndex]);
 
-  return (
-    <GameContext.Provider value={{ questions, currentQuestionIndex, userAnswers, gameOver, nextQuestion, restartGame: startNewGame }}>
-      {children}
-    </GameContext.Provider>
+  const value = useMemo(
+    () => ({
+      questions,
+      currentQuestionIndex,
+      userAnswers,
+      gameOver,
+      nextQuestion,
+      restartGame: startNewGame,
+    }),
+    [questions, currentQuestionIndex, userAnswers, gameOver, nextQuestion]
   );
+
+  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 };
 
 export const useGame = () => {
