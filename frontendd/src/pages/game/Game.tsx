@@ -2,18 +2,26 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
+import { useGame } from "../../context/GameContext";
+import GameOverModal from "../../components/GameOver";
 
 const Game = () => {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const question =
-    "Two high-performance race cars are lined up at the starting line, ready to battle it out on a fast-paced, high-stakes track. Car A and Car B, which do you think would win";
-  const options = ["Car A", "Car B", "Both"];
+  const { questions, currentQuestionIndex, nextQuestion, gameOver } = useGame();
+
+  const [showModal, setShowModal] = useState(false);
+
+  const currentQuestion = questions[currentQuestionIndex];
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
   };
+
+  if (gameOver && !showModal) {
+    setShowModal(true);
+  }
 
   return (
     <motion.section
@@ -23,7 +31,9 @@ const Game = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="-mt-20 flex flex-col h-svh items-center justify-center"
     >
-      <h1 className="mb-10 text-xl">Round 1</h1>
+
+      {
+        !gameOver ? (
       <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF]">
         {/* Question */}
         <motion.h2
@@ -32,7 +42,7 @@ const Game = () => {
           transition={{ duration: 0.5 }}
           className="text-2xl font-bold text-white text-center px-4"
         >
-          {question}
+          {currentQuestion?.question}
         </motion.h2>
 
         {/* Options */}
@@ -42,21 +52,31 @@ const Game = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col w-full items-center gap-4"
         >
-          {options.map((option, index) => (
             <motion.button
-              key={index}
               whileTap={{ scale: 0.9 }}
               whileHover={{ scale: 1.1 }}
               className={`w-[80%] rounded-[2rem] p-4 text-xl font-semibold  text-white transition-all ${
-                selectedOption === option
-                  ? "bg-green-500"
-                  : "bg-[#2463FF] hover:bg-blue-600"
+                selectedOption === currentQuestion?.option1
+                  ? "bg-green-500/60"
+                  : "bg-[#000]/30"
               }`}
-              onClick={() => handleSelect(option)}
+              onClick={() => handleSelect(currentQuestion?.option1)}
             >
-              {option}
+              {currentQuestion?.option1}
             </motion.button>
-          ))}
+
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              className={`w-[80%] rounded-[2rem] p-4 text-xl font-semibold  text-white transition-all ${
+                selectedOption === currentQuestion?.option2
+                  ? "bg-green-500/60"
+                  : "bg-[#000]/30"
+              }`}
+              onClick={() => handleSelect(currentQuestion?.option2)}
+            >
+              {currentQuestion?.option2}
+            </motion.button>
         </motion.div>
 
         {/* Back Button */}
@@ -72,13 +92,18 @@ const Game = () => {
             className="uppercase bg-opacity-20"
           />
 
-          <Button
-            name="Submit"
-            onClick={() => navigate("/")}
+          <Button 
+            name="Next"
+            onClick={() => nextQuestion(currentQuestion.option2)}
             className="uppercase bg-opacity-20"
           />
         </motion.div>
       </div>
+        ) : (
+          showModal && <GameOverModal onClose={() => setShowModal(false)} />
+        )
+      }
+      {/* <h1 className="mb-10 text-xl">Round 1</h1> */}
     </motion.section>
   );
 };
