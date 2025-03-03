@@ -47,7 +47,7 @@ const Home = () => {
 
         <div className="flex translate-y-10 flex-col items-center justify-center gap-[2.5rem]">
           <div className="text-center">
-            <h1 className="font text-5xl font-bold mb-2">Undead Unluck</h1>
+            <h1 className="font text-5xl font-bold mb-2">Lucky Me</h1>
 
             <h3 className="text-2xl text-gray-300">
               Hypervisual prediction game, built on{" "}
