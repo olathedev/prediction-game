@@ -1,73 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { useWriteContract, useAccount, BaseError } from "wagmi";
-import rawAbi from "../../abi/Game.json";
-import toast from "react-hot-toast";
+import { useUsername } from "../../hooks/use-contract.hook"; // Import the custom hook
 import Button from "../../components/Button";
-
-const abi = rawAbi.abi;
 
 const Username = () => {
   const [username, setUsername] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [transactionStatus, setTransactionStatus] = useState<string | null>(
-    null
-  );
   const navigate = useNavigate();
-  const { isConnected } = useAccount();
-  const { data: hash, isPending, writeContract, error } = useWriteContract();
+  const { setUsernameOnChain, isPending, transactionStatus, errorMessage } =
+    useUsername();
 
   useEffect(() => {
-    if (hash) {
-      setTransactionStatus("Transaction successful!");
+    if (transactionStatus) {
       setTimeout(() => {
         navigate("/game");
       }, 2000);
     }
-    if (error) {
-      toast.error(error.message ?? "Transaction failed. Please try again.");
-    }
-  }, [hash, navigate, error]);
+  }, [transactionStatus, navigate]);
 
-  const handleSubmit = async() => {
-    if (!isConnected) {
-      toast.error("Please connect your wallet first.");
-      return;
-    }
-    if (!username.trim()) {
-      toast.error("Username cannot be empty.");
-      return;
-    }
-
-    setTransactionStatus(null);
-    setErrorMessage("");
-
-    try {
-      await writeContract({
-        address: "0x9cb3D742b89a2b363f84417120AADe481207c0F2",
-        abi,
-        functionName: "setUsername",
-        args: [username],
-      });
-    } catch (err: unknown) {
-      if (err instanceof BaseError) {
-        setErrorMessage(err.shortMessage || err.message);
-      }
-    }
-    if (username.length < 4) {
-      toast.error("Username must be at least 4 characters long!");
-      return;
-    }
-
-    writeContract({
-      address: "0x994AB27b19223257bA5CdEd057fD03a2C0650BAC",
-      abi,
-      functionName: "setUsername",
-      args: [username],
-    });
-
-    // navigate("/game"); // Uncomment if you want to navigate after setting the username
+  const handleSubmit = () => {
+    setUsernameOnChain(username);
   };
 
   return (
