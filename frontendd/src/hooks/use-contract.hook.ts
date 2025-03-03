@@ -14,8 +14,18 @@ const CONTRACT_ADDRESS = "0x6b135f6B2d1B74C2eDDBff30C47122914E3Bc37c";
 
 export const useGuessGame = () => {
   const { isConnected, address } = useAccount();
+  const [transactionStatus, setTransactionStatus] = useState<string | null>(null);
+  const { writeContract, isPending, data: hash, error } = useWriteContract();
 
-  const { writeContract } = useWriteContract();
+  useEffect(() => {
+    if (hash) {
+      setTransactionStatus("success");
+    }
+    if (error) {
+      toast.error(error.message ?? "Transaction failed. Please try again.");
+    }
+  }, [hash, error]);
+
   /**
    * Submit predictions and stake ETH.
    */
@@ -115,6 +125,8 @@ export const useGuessGame = () => {
     playerData,
     gameLeaderboard,
     globalLeaderboard,
+    transactionStatus,
+    isPending
   };
 };
 
