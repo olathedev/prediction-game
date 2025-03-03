@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
@@ -23,7 +23,7 @@ const Game = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="-mt-20 flex flex-col h-svh items-center justify-center"
     >
-      <h1 className="mb-4 text-3xl">Round 1</h1>
+      <h1 className="mb-10 text-xl">Round 1</h1>
       <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF]">
         {/* Question */}
         <motion.h2
