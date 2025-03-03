@@ -11,12 +11,12 @@ const NavBar = () => {
     <div className="container flex items-center justify-between w-full md:mx-auto my-6 bg-[#2463FF]/40 py-2 sm:px-4 px-2 rounded-full">
       <div>
         <Link to="/" className="text-white">
-          <img src="/images/logo.png" className="h-14" alt="Logo" />
+          <img src="/images/logo.png" className="max-w-8" alt="Logo" />
+          <p></p>
         </Link>
       </div>
 
       <div className="hidden md:flex items-center gap-6">
-        <p className="text-xl">@Username</p>
         <div className="flex gap-2 items-center text-xl">
           <img
             src="/images/trophy-svgrepo-com.svg"
@@ -27,7 +27,7 @@ const NavBar = () => {
             Leaderboard
           </Link>
         </div>
-
+        <p className="text-xl">@Username</p>
         <div className="flex items-center gap-2">
           <img src="/images/coin.png" className="h-5" alt="Coin" />
           <span className="text-xl">20</span>
