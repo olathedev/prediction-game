@@ -60,7 +60,7 @@ const Home = () => {
               <Button name="Get Started!" className="uppercase" />
             </Link>
 
-            <Link to="">
+            <Link to="/play-guide">
               <Button name="Play Guides" className="uppercase bg-opacity-20" />
             </Link>
           </div>

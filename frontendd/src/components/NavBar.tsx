@@ -1,14 +1,16 @@
-
-
 import { Link } from "react-router-dom";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
 import { IoMdMenu } from "react-icons/io";
 import { IoCloseSharp } from "react-icons/io5";
+import { useGuessGame } from "../hooks/use-contract.hook";
+import { PlayerData } from "../interface";
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { playerData } = useGuessGame() as { playerData: PlayerData | null };
 
+  console.log(playerData);
   return (
     <div className="container flex items-center justify-between w-full md:mx-auto my-6 bg-[#2463FF]/40 py-2 sm:px-4 px-2 rounded-full">
       <div>
@@ -29,7 +31,7 @@ const NavBar = () => {
             Leaderboard
           </Link>
         </div>
-        <p className="text-xl">@Username</p>
+        {playerData && <p className="text-xl">@{playerData?.username}</p>}
         <div className="flex items-center gap-2">
           <img src="/images/coin.png" className="h-5" alt="Coin" />
           <span className="text-xl">20</span>
@@ -47,7 +49,7 @@ const NavBar = () => {
 
       {menuOpen && (
         <div className="absolute top-16 right-4 bg-[#2463FF] text-white rounded-lg p-4 shadow-md w-48">
-          <p className="text-lg">@Username</p>
+          {playerData && <p className="text-lg">@{playerData?.username}</p>}
           <div className="flex items-center gap-2 mt-2">
             <img src="/images/coin.png" className="h-5" alt="Coin" />
             <span className="text-lg">20</span>
