@@ -26,17 +26,17 @@ const Username = () => {
       }, 2000);
     }
     if (error) {
-      setErrorMessage(error.message ?? "Transaction failed. Please try again.");
+      toast.error(error.message ?? "Transaction failed. Please try again.");
     }
   }, [hash, navigate, error]);
 
   const handleSubmit = async() => {
     if (!isConnected) {
-      setErrorMessage("Please connect your wallet first.");
+      toast.error("Please connect your wallet first.");
       return;
     }
     if (!username.trim()) {
-      setErrorMessage("Username cannot be empty.");
+      toast.error("Username cannot be empty.");
       return;
     }
 
