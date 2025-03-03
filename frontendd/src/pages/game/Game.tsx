@@ -31,27 +31,25 @@ const Game = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="-mt-20 flex flex-col h-svh items-center justify-center"
     >
+      {!gameOver ? (
+        <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF]">
+          {/* Question */}
+          <motion.h2
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl font-bold text-white text-center px-4"
+          >
+            {currentQuestion?.question}
+          </motion.h2>
 
-      {
-        !gameOver ? (
-      <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF]">
-        {/* Question */}
-        <motion.h2
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-2xl font-bold text-white text-center px-4"
-        >
-          {currentQuestion?.question}
-        </motion.h2>
-
-        {/* Options */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col w-full items-center gap-4"
-        >
+          {/* Options */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col w-full items-center gap-4"
+          >
             <motion.button
               whileTap={{ scale: 0.9 }}
               whileHover={{ scale: 1.1 }}
@@ -77,32 +75,31 @@ const Game = () => {
             >
               {currentQuestion?.option2}
             </motion.button>
-        </motion.div>
+          </motion.div>
 
-        {/* Back Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex gap-6"
-        >
-          <Button
-            name="Go Back"
-            onClick={() => navigate("/")}
-            className="uppercase bg-opacity-20"
-          />
+          {/* Back Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex gap-6"
+          >
+            <Button
+              name="Go Back"
+              onClick={() => navigate("/")}
+              className="uppercase bg-opacity-20"
+            />
 
-          <Button 
-            name="Next"
-            onClick={() => nextQuestion(currentQuestion.option2)}
-            className="uppercase bg-opacity-20"
-          />
-        </motion.div>
-      </div>
-        ) : (
-          showModal && <GameOverModal onClose={() => setShowModal(false)} />
-        )
-      }
+            <Button
+              name="Next"
+              onClick={() => nextQuestion(currentQuestion.option2)}
+              className="uppercase bg-opacity-20"
+            />
+          </motion.div>
+        </div>
+      ) : (
+        showModal && <GameOverModal onClose={() => setShowModal(false)} />
+      )}
       {/* <h1 className="mb-10 text-xl">Round 1</h1> */}
     </motion.section>
   );
