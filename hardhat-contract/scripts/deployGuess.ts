@@ -9,8 +9,7 @@ async function main() {
 
   await guessGame.waitForDeployment();
 
-  // console.log(`GuessGame deployed at: ${guessGame.address}`);
-  console.log("GuessGame deployed to:",await guessGame.getAddress());
+   console.log("GuessGame deployed to:",await guessGame.getAddress());
 }
 
 // Run the script

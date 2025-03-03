@@ -45,7 +45,7 @@ const Username = () => {
 
     try {
       await writeContract({
-        address: "0x9cb3D742b89a2b363f84417120AADe481207c0F2",
+        address: "0x6b135f6B2d1B74C2eDDBff30C47122914E3Bc37c",
         abi,
         functionName: "setUsername",
         args: [username],
