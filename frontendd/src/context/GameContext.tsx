@@ -38,7 +38,6 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   const nextQuestion = (answer: string) => {
     setUserAnswers((prev) => [...prev, answer]);
-
     if (currentQuestionIndex < 9) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else {

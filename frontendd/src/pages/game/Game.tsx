@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
@@ -9,7 +9,7 @@ const Game = () => {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
-  const { questions, currentQuestionIndex, nextQuestion, gameOver } = useGame();
+  const { questions, currentQuestionIndex, nextQuestion, gameOver, userAnswers } = useGame();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -18,6 +18,10 @@ const Game = () => {
   const handleSelect = (option: string) => {
     setSelectedOption(option);
   };
+
+  useEffect(() => {
+    console.log(userAnswers)
+  }, [userAnswers])
 
   if (gameOver && !showModal) {
     setShowModal(true);
