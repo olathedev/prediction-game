@@ -23,7 +23,7 @@ const Nav: React.FC<NavProp> = ({ img }) => {
         animate={{ x: "0vw", scale: 1 }}
         transition={{
           duration: 1,
-          stiffness: 200, // Increased stiffness for a faster animation
+          stiffness: 200, 
           damping: 10,
           delay: 0.5,
         }}

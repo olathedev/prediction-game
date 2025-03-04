@@ -10,7 +10,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
+  // const { disconnect } = useDisconnect();
   const { playerData } = useGuessGame() as { playerData: PlayerData | null };
 
   const handleStartGame = async () => {
@@ -66,14 +66,6 @@ const Home = () => {
             <Link to="/play-guide">
               <Button name="Play Guides" className="uppercase bg-opacity-20" />
             </Link>
-
-            {isConnected && (
-              <Button
-                name="Disconnect Wallet"
-                className="uppercase bg-red-600"
-                onClick={() => disconnect()}
-              />
-            )}
           </div>
         </div>
       </div>
