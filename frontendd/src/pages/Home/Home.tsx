@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../../components/Button";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { useGuessGame } from "../../hooks/use-contract.hook";
 import { PlayerData } from "../../interface";
 import toast from "react-hot-toast";
@@ -10,7 +10,6 @@ const Home = () => {
   const navigate = useNavigate();
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  // const { disconnect } = useDisconnect();
   const { playerData } = useGuessGame() as { playerData: PlayerData | null };
 
   const handleStartGame = async () => {

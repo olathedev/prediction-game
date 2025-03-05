@@ -9,7 +9,7 @@ contract GuessGame {
     address public owner;
     uint256 public constant QUESTIONS_PER_GAME = 10;
     uint256 public constant POINTS_PER_CORRECT_ANSWER = 10;
-    uint256 public constant STREAK_REWARD_POINTS = 50; 
+    uint256 public constant STREAK_REWARD_POINTS = 50;
     uint256 public constant STREAK_LENGTH = 3;
     uint256 public currentGameId;
 
@@ -25,6 +25,7 @@ contract GuessGame {
 
     struct GameResult {
         address player;
+        string username;
         uint256 correctAnswers;
         uint256 totalPoints;
     }
@@ -35,8 +36,7 @@ contract GuessGame {
     mapping(address => uint256[QUESTIONS_PER_GAME]) public userPredictions;
     mapping(address => uint256[QUESTIONS_PER_GAME]) public correctAnswers;
     mapping(address => bool) public resultsGenerated;
-    address[] public globalLeaderboard;
-    
+
     event PredictionsSubmitted(address indexed player, uint256[QUESTIONS_PER_GAME] answers);
     event ResultsGenerated(address indexed player, uint256[QUESTIONS_PER_GAME] correctAnswers);
     event PointsUpdated(address indexed player, uint256 totalCorrect, uint256 totalPoints);
@@ -55,8 +55,8 @@ contract GuessGame {
 
     function setUsername(string memory _username) external {
         require(bytes(_username).length > 0, "Username cannot be empty");
-        
-        for (uint i = 0; i < allPlayers.length; i++) {
+
+        for (uint256 i = 0; i < allPlayers.length; i++) {
             require(
                 keccak256(bytes(players[allPlayers[i]].username)) != keccak256(bytes(_username)),
                 "Username already taken"
@@ -79,7 +79,7 @@ contract GuessGame {
         userPredictions[msg.sender] = answers;
         players[msg.sender].stakedAmount = msg.value;
         players[msg.sender].hasPlayed = true;
-        
+
         _generateCorrectAnswers();
         emit PredictionsSubmitted(msg.sender, answers);
     }
@@ -89,12 +89,12 @@ contract GuessGame {
         require(players[player].hasPlayed, "Player has not played");
 
         uint256[QUESTIONS_PER_GAME] memory generatedAnswers;
-        for (uint i = 0; i < QUESTIONS_PER_GAME; i++) {
+        for (uint256 i = 0; i < QUESTIONS_PER_GAME; i++) {
             generatedAnswers[i] = uint256(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, player, i))) % 2;
         }
         correctAnswers[player] = generatedAnswers;
         resultsGenerated[player] = true;
-        
+
         _calculateScore(player);
         emit ResultsGenerated(player, generatedAnswers);
     }
@@ -107,7 +107,7 @@ contract GuessGame {
         uint256[QUESTIONS_PER_GAME] memory userAnswers = userPredictions[player];
         uint256[QUESTIONS_PER_GAME] memory generatedAnswers = correctAnswers[player];
 
-        for (uint i = 0; i < QUESTIONS_PER_GAME; i++) {
+        for (uint256 i = 0; i < QUESTIONS_PER_GAME; i++) {
             if (userAnswers[i] == generatedAnswers[i]) {
                 correctCount++;
             }
@@ -120,19 +120,9 @@ contract GuessGame {
             p.totalPoints += STREAK_REWARD_POINTS;
             emit Events.StreakReward(player, p.currentStreak, STREAK_REWARD_POINTS);
         }
-        
-        gameResults[currentGameId].push(GameResult(player, correctCount, p.totalPoints));
-        _updateGlobalLeaderboard(player);
-        emit PointsUpdated(player, correctCount, p.totalPoints);
-    }
 
-    function _updateGlobalLeaderboard(address player) internal {
-        for (uint i = 0; i < globalLeaderboard.length; i++) {
-            if (globalLeaderboard[i] == player) {
-                return;
-            }
-        }
-        globalLeaderboard.push(player);
+        gameResults[currentGameId].push(GameResult(player, p.username, correctCount, p.totalPoints));
+        emit PointsUpdated(player, correctCount, p.totalPoints);
     }
 
     function finishGame() external onlyOwner {
@@ -144,18 +134,22 @@ contract GuessGame {
         return gameResults[gameId];
     }
 
-    function getGlobalLeaderboard() external view returns (address[] memory) {
-        return globalLeaderboard;
+    function getGlobalLeaderboard() external view returns (Player[] memory) {
+        Player[] memory leaderboard = new Player[](allPlayers.length);
+        for (uint256 i = 0; i < allPlayers.length; i++) {
+            leaderboard[i] = players[allPlayers[i]];
+        }
+        return leaderboard;
     }
 
     function withdrawStake() external {
         Player storage p = players[msg.sender];
         require(resultsGenerated[msg.sender], "Results not generated");
         require(p.stakedAmount > 0, "No stake to withdraw");
-        
+
         uint256 amount = p.stakedAmount;
         p.stakedAmount = 0;
-        
+
         payable(msg.sender).transfer(amount);
         emit StakeWithdrawn(msg.sender, amount);
     }

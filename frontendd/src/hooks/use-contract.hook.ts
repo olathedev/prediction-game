@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { parseEther } from "viem";
 
 const abi = rawAbi.abi;
-const CONTRACT_ADDRESS = "0x6b135f6B2d1B74C2eDDBff30C47122914E3Bc37c";
+const CONTRACT_ADDRESS = "0x1C388778E6e0D1f6C606a7cbDB16186c560F7b70";
 
 export const useGuessGame = () => {
   const { isConnected, address } = useAccount();
@@ -94,7 +94,7 @@ export const useGuessGame = () => {
     args: address ? [address] : undefined,
   });
 
-  /**
+  /**globalLeaderboard
    * Fetch the game leaderboard.
    */
   const { data: gameLeaderboard, refetch: getGameLeaderboard } =
@@ -102,7 +102,7 @@ export const useGuessGame = () => {
       address: CONTRACT_ADDRESS,
       abi,
       functionName: "getGameLeaderboard",
-      args: address ? [address] : undefined,
+      args: [1],
     });
 
   /**
