@@ -1,0 +1,155 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/manji/Documents/Blockfuse/prediction-game/hardhat-contract/contracts/Game.sol": {
+      "lastModificationDate": 1740949800766,
+      "contentHash": "2a65066950e67c72eab8ce40ab5387bc",
+      "sourceName": "contracts/Game.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./lib/Events.sol",
+        "./lib/Errors.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "PredictionGame"
+      ]
+    },
+    "/home/manji/Documents/Blockfuse/prediction-game/hardhat-contract/contracts/lib/Events.sol": {
+      "lastModificationDate": 1740949800671,
+      "contentHash": "20cf1e35db2565900d50e207fae6eb44",
+      "sourceName": "contracts/lib/Events.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "Events"
+      ]
+    },
+    "/home/manji/Documents/Blockfuse/prediction-game/hardhat-contract/contracts/lib/Errors.sol": {
+      "lastModificationDate": 1740949800667,
+      "contentHash": "50c4f65e70d7731c14d95311b20f6462",
+      "sourceName": "contracts/lib/Errors.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "Errors"
+      ]
+    },
+    "/home/manji/Documents/Blockfuse/prediction-game/hardhat-contract/contracts/Guess.sol": {
+      "lastModificationDate": 1741211763317,
+      "contentHash": "1010c5edeb12fa6add0daf92c64a2131",
+      "sourceName": "contracts/Guess.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./lib/Events.sol",
+        "./lib/Errors.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.13"
+      ],
+      "artifacts": [
+        "GuessGame"
+      ]
+    }
+  }
+}
