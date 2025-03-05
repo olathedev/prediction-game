@@ -42,7 +42,7 @@ export const useGuessGame = () => {
       return;
     }
     if (stakeAmount <= 0) {
-      toast.error("You must stake some ETH.");
+      toast.error("You must stake some   ETH.");
       return;
     }
 
