@@ -7,12 +7,13 @@ import "../src/Game.sol";
 contract RegisterPlayerScript is Script {
     function run() external {
         uint256 privateKey = vm.envUint("PRIVATE_KEY");
+        // Remove vm.deal since we're on testnet and need real funds
         vm.startBroadcast(privateKey);
 
         // Use the deployed contract address from your environment
-        Game game = Game(vm.envAddress("GAME_ADDRESS"));
+        PredictionGame game = PredictionGame(vm.envAddress("GAME_ADDRESS"));
         string memory username = "player123";
-        game.createPlayer(username);
+        game.setUsername(username);
 
         console.log("Player registered with username:", username);
         vm.stopBroadcast();

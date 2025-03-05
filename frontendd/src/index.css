@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Mouse+Memoirs&family=Outfit:wght@100..900&display=swap&family=Montserrat:ital,wght@0,100..900;1,100..900");
+@import "tailwindcss";
+
+:root {
+  font-family: "Mouse Memoirs", serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  overflow: hidden;
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  --font-display: "Outfit", "sans-serif"
+  --font-monts: "Montserrat"
+}
+
+button {
+  outline: none;
+}
+body {
+  min-height: 100svh; /* Ensure the body covers at least the viewport height */
+  margin: 0; /* Remove default margin */
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (max-width: 480px) {
+  body {
+    background: url("/images/background-mobile.svg"), linear-gradient(to bottom, #1e3c72, #2a5298);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+@media screen and (min-width: 720px) {
+  body {
+    background: url("/images/background-tablet.svg"), linear-gradient(to bottom, #1e3c72, #2a5298);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+@media screen and (min-width: 1024px) {
+  body {
+    background-image: url("/images/background-desktop.svg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+.bg-custom-gradient {
+  background: linear-gradient(180deg, #344aba 0%, rgba(0, 20, 121, 0.83) 100%);
+}

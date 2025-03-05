@@ -1,0 +1,842 @@
+[
+    {
+      "question": "Which will I dream about tonight, mountains or oceans?",
+      "option1": "Mountains",
+      "option2": "Oceans"
+    },
+    {
+      "question": "Am I thinking of a square or a circle right now?",
+      "option1": "Square",
+      "option2": "Circle"
+    },
+    {
+      "question": "In my imagination, is the door red or blue?",
+      "option1": "Red",
+      "option2": "Blue"
+    },
+    {
+      "question": "Will the next raindrop fall on the left or right side of the window?",
+      "option1": "Left",
+      "option2": "Right"
+    },
+    {
+      "question": "Do I prefer cats or dogs in this moment?",
+      "option1": "Cats",
+      "option2": "Dogs"
+    },
+    {
+      "question": "Is the song in my head fast or slow?",
+      "option1": "Fast",
+      "option2": "Slow"
+    },
+    {
+      "question": "Which will I choose next time, sweet or savory?",
+      "option1": "Sweet",
+      "option2": "Savory"
+    },
+    {
+      "question": "Am I picturing sunrise or sunset?",
+      "option1": "Sunrise",
+      "option2": "Sunset"
+    },
+    {
+      "question": "In my mind, is the butterfly yellow or purple?",
+      "option1": "Yellow",
+      "option2": "Purple"
+    },
+    {
+      "question": "Will I blink with my left eye or right eye first?",
+      "option1": "Left eye",
+      "option2": "Right eye"
+    },
+    {
+      "question": "Is the imaginary ball bouncing high or low?",
+      "option1": "High",
+      "option2": "Low"
+    },
+    {
+      "question": "Do I imagine a square box or a round box?",
+      "option1": "Square box",
+      "option2": "Round box"
+    },
+    {
+      "question": "Which fictional character am I thinking of, a hero or villain?",
+      "option1": "Hero",
+      "option2": "Villain"
+    },
+    {
+      "question": "Am I visualizing a forest or a desert?",
+      "option1": "Forest",
+      "option2": "Desert"
+    },
+    {
+      "question": "In my imagination, is the bird flying north or south?",
+      "option1": "North",
+      "option2": "South"
+    },
+    {
+      "question": "Which hand will I use to pick up my phone next time?",
+      "option1": "Left hand",
+      "option2": "Right hand"
+    },
+    {
+      "question": "Is the fictional character in my mind tall or short?",
+      "option1": "Tall",
+      "option2": "Short"
+    },
+    {
+      "question": "Am I thinking about the moon or the sun?",
+      "option1": "Moon",
+      "option2": "Sun"
+    },
+    {
+      "question": "In my next daydream, will I be flying or swimming?",
+      "option1": "Flying",
+      "option2": "Swimming"
+    },
+    {
+      "question": "Which will appear in my thoughts first, a tiger or a lion?",
+      "option1": "Tiger",
+      "option2": "Lion"
+    },
+    {
+      "question": "Am I imagining a loud sound or a quiet whisper?",
+      "option1": "Loud sound",
+      "option2": "Quiet whisper"
+    },
+    {
+      "question": "Will I scratch my left or right arm next?",
+      "option1": "Left arm",
+      "option2": "Right arm"
+    },
+    {
+      "question": "In my imagination, is the house on a hill or by a lake?",
+      "option1": "On a hill",
+      "option2": "By a lake"
+    },
+    {
+      "question": "Which color will catch my eye next, green or purple?",
+      "option1": "Green",
+      "option2": "Purple"
+    },
+    {
+      "question": "Am I thinking of summer or winter right now?",
+      "option1": "Summer",
+      "option2": "Winter"
+    },
+    {
+      "question": "Will the next cloud I see look more like an animal or an object?",
+      "option1": "Animal",
+      "option2": "Object"
+    },
+    {
+      "question": "In my mind, is the road winding or straight?",
+      "option1": "Winding",
+      "option2": "Straight"
+    },
+    {
+      "question": "Which would I reach for first in my imagination, a book or a remote?",
+      "option1": "Book",
+      "option2": "Remote"
+    },
+    {
+      "question": "Am I picturing a calm sea or rough waves?",
+      "option1": "Calm sea",
+      "option2": "Rough waves"
+    },
+    {
+      "question": "In my thoughts, is the tree bearing fruit or flowers?",
+      "option1": "Fruit",
+      "option2": "Flowers"
+    },
+    {
+      "question": "Which fictional place would I visit first, a castle or a spaceship?",
+      "option1": "Castle",
+      "option2": "Spaceship"
+    },
+    {
+      "question": "Am I imagining a hot or cold drink right now?",
+      "option1": "Hot drink",
+      "option2": "Cold drink"
+    },
+    {
+      "question": "Will I dream in color or black and white tonight?",
+      "option1": "Color",
+      "option2": "Black and white"
+    },
+    {
+      "question": "In my mind, is the mysterious door opening inward or outward?",
+      "option1": "Inward",
+      "option2": "Outward"
+    },
+    {
+      "question": "Which will I notice first the next time I go outside, a bird or a cloud?",
+      "option1": "Bird",
+      "option2": "Cloud"
+    },
+    {
+      "question": "Am I thinking of something round or something square?",
+      "option1": "Round",
+      "option2": "Square"
+    },
+    {
+      "question": "In my imagination, is the river flowing fast or slow?",
+      "option1": "Fast",
+      "option2": "Slow"
+    },
+    {
+      "question": "Which imaginary scent am I focusing on, floral or fruity?",
+      "option1": "Floral",
+      "option2": "Fruity"
+    },
+    {
+      "question": "Am I picturing a sunrise or a sunset right now?",
+      "option1": "Sunrise",
+      "option2": "Sunset"
+    },
+    {
+      "question": "In my next thought, will I be indoors or outdoors?",
+      "option1": "Indoors",
+      "option2": "Outdoors"
+    },
+    {
+      "question": "Which will I think of first when falling asleep, a mountain or an ocean?",
+      "option1": "Mountain",
+      "option2": "Ocean"
+    },
+    {
+      "question": "Am I envisioning something small or something large?",
+      "option1": "Small",
+      "option2": "Large"
+    },
+    {
+      "question": "In my imagination, is the mysterious creature friendly or dangerous?",
+      "option1": "Friendly",
+      "option2": "Dangerous"
+    },
+    {
+      "question": "Will my next sneeze be loud or quiet?",
+      "option1": "Loud",
+      "option2": "Quiet"
+    },
+    {
+      "question": "Which would I prefer right now in my imagination, flight or invisibility?",
+      "option1": "Flight",
+      "option2": "Invisibility"
+    },
+    {
+      "question": "Am I thinking of a spiral or a zigzag pattern?",
+      "option1": "Spiral",
+      "option2": "Zigzag"
+    },
+    {
+      "question": "In my mind, is the hidden treasure buried in sand or hidden in a cave?",
+      "option1": "Buried in sand",
+      "option2": "Hidden in a cave"
+    },
+    {
+      "question": "Which will I dream about tonight, flying or falling?",
+      "option1": "Flying",
+      "option2": "Falling"
+    },
+    {
+      "question": "Am I picturing a winding road or a straight path?",
+      "option1": "Winding road",
+      "option2": "Straight path"
+    },
+    {
+      "question": "In the next minute, will I think more about the past or the future?",
+      "option1": "Past",
+      "option2": "Future"
+    },
+    {
+      "question": "Which imaginary pet would I prefer today, a dragon or a unicorn?",
+      "option1": "Dragon",
+      "option2": "Unicorn"
+    },
+    {
+      "question": "Am I visualizing a crowded place or an empty space?",
+      "option1": "Crowded place",
+      "option2": "Empty space"
+    },
+    {
+      "question": "In my thoughts, is the secret door hidden behind a bookshelf or under a rug?",
+      "option1": "Behind a bookshelf",
+      "option2": "Under a rug"
+    },
+    {
+      "question": "Which will I notice first the next time I look up, the moon or a star?",
+      "option1": "Moon",
+      "option2": "Star"
+    },
+    {
+      "question": "Am I thinking of an old memory or creating a new idea?",
+      "option1": "Old memory",
+      "option2": "New idea"
+    },
+    {
+      "question": "In my imagination, would I rather explore an ancient ruin or a futuristic city?",
+      "option1": "Ancient ruin",
+      "option2": "Futuristic city"
+    },
+    {
+      "question": "Which hand will I use to scratch my next itch?",
+      "option1": "Left hand",
+      "option2": "Right hand"
+    },
+    {
+      "question": "Am I picturing a dark forest or a sunny meadow?",
+      "option1": "Dark forest",
+      "option2": "Sunny meadow"
+    },
+    {
+      "question": "In my mind, is the mysterious light coming from above or below?",
+      "option1": "Above",
+      "option2": "Below"
+    },
+    {
+      "question": "Will I dream about flying or swimming tonight?",
+      "option1": "Flying",
+      "option2": "Swimming"
+    },
+    {
+      "question": "Which would I choose in my imagination right now, invisibility or mind reading?",
+      "option1": "Invisibility",
+      "option2": "Mind reading"
+    },
+    {
+      "question": "Am I thinking of a melody or a rhythm?",
+      "option1": "Melody",
+      "option2": "Rhythm"
+    },
+    {
+      "question": "In my next daydream, will I be alone or with others?",
+      "option1": "Alone",
+      "option2": "With others"
+    },
+    {
+      "question": "Which will appear in my thoughts first, a circle or a triangle?",
+      "option1": "Circle",
+      "option2": "Triangle"
+    },
+    {
+      "question": "Am I imagining a whisper or a shout?",
+      "option1": "Whisper",
+      "option2": "Shout"
+    },
+    {
+      "question": "In my mind, is the secret passage leading up or down?",
+      "option1": "Up",
+      "option2": "Down"
+    },
+    {
+      "question": "Which will I notice first when I close my eyes, darkness or patterns?",
+      "option1": "Darkness",
+      "option2": "Patterns"
+    },
+    {
+      "question": "Am I thinking more about the beginning or the end?",
+      "option1": "Beginning",
+      "option2": "End"
+    },
+    {
+      "question": "In my imagination, is the mysterious figure approaching or retreating?",
+      "option1": "Approaching",
+      "option2": "Retreating"
+    },
+    {
+      "question": "Will the next song I hear make me feel happy or melancholic?",
+      "option1": "Happy",
+      "option2": "Melancholic"
+    },
+    {
+      "question": "Which would I find more interesting right now, a mystery or a romance?",
+      "option1": "Mystery",
+      "option2": "Romance"
+    },
+    {
+      "question": "Am I visualizing something stationary or something in motion?",
+      "option1": "Stationary",
+      "option2": "In motion"
+    },
+    {
+      "question": "In my mind, is the path ahead clear or obscured?",
+      "option1": "Clear",
+      "option2": "Obscured"
+    },
+    {
+      "question": "Which will I think of first before falling asleep, a person or a place?",
+      "option1": "Person",
+      "option2": "Place"
+    },
+    {
+      "question": "Am I picturing a narrow road or a wide avenue?",
+      "option1": "Narrow road",
+      "option2": "Wide avenue"
+    },
+    {
+      "question": "In my imagination, is the unexpected gift wrapped in gold or silver paper?",
+      "option1": "Gold paper",
+      "option2": "Silver paper"
+    },
+    {
+      "question": "Will my next randomly selected memory be from childhood or adulthood?",
+      "option1": "Childhood",
+      "option2": "Adulthood"
+    },
+    {
+      "question": "Which would I choose as my spirit animal, a wolf or an eagle?",
+      "option1": "Wolf",
+      "option2": "Eagle"
+    },
+    {
+      "question": "Am I thinking about something that happened or something that could happen?",
+      "option1": "Something that happened",
+      "option2": "Something that could happen"
+    },
+    {
+      "question": "In my mind, is the shadow moving left or right?",
+      "option1": "Left",
+      "option2": "Right"
+    },
+    {
+      "question": "Which will I crave more tomorrow, something sweet or something salty?",
+      "option1": "Sweet",
+      "option2": "Salty"
+    },
+    {
+      "question": "Am I picturing a smooth surface or a rough texture?",
+      "option1": "Smooth surface",
+      "option2": "Rough texture"
+    },
+    {
+      "question": "In my imagination, would I rather have wings or fins?",
+      "option1": "Wings",
+      "option2": "Fins"
+    },
+    {
+      "question": "Will my next spontaneous thought be positive or negative?",
+      "option1": "Positive",
+      "option2": "Negative"
+    },
+    {
+      "question": "Which will catch my attention first the next time I look around, something moving or something still?",
+      "option1": "Something moving",
+      "option2": "Something still"
+    },
+    {
+      "question": "Am I visualizing an open space or an enclosed area?",
+      "option1": "Open space",
+      "option2": "Enclosed area"
+    },
+    {
+      "question": "In my thoughts, is the door to the unknown locked or unlocked?",
+      "option1": "Locked",
+      "option2": "Unlocked"
+    },
+    {
+      "question": "Which will I notice first about the next person I see, their face or their clothes?",
+      "option1": "Their face",
+      "option2": "Their clothes"
+    },
+    {
+      "question": "Am I thinking of something that exists or something imaginary?",
+      "option1": "Something that exists",
+      "option2": "Something imaginary"
+    },
+    {
+      "question": "In my mind, is the ancient artifact made of stone or metal?",
+      "option1": "Stone",
+      "option2": "Metal"
+    },
+    {
+      "question": "Will I dream about the past or the future tonight?",
+      "option1": "Past",
+      "option2": "Future"
+    },
+    {
+      "question": "Which would I prefer right now in my imagination, teleportation or time travel?",
+      "option1": "Teleportation",
+      "option2": "Time travel"
+    },
+    {
+      "question": "Am I picturing a linear or a circular path?",
+      "option1": "Linear path",
+      "option2": "Circular path"
+    },
+    {
+      "question": "In my next creative thought, will I focus on visuals or sounds?",
+      "option1": "Visuals",
+      "option2": "Sounds"
+    },
+    {
+      "question": "Which will I think about first when awakening tomorrow, what I dreamed or what I'll do?",
+      "option1": "What I dreamed",
+      "option2": "What I'll do"
+    },
+    {
+      "question": "Am I imagining a natural or a man-made wonder?",
+      "option1": "Natural wonder",
+      "option2": "Man-made wonder"
+    },
+    {
+      "question": "In my mind, is the hidden message written in black or blue ink?",
+      "option1": "Black ink",
+      "option2": "Blue ink"
+    },
+    {
+      "question": "Which will I encounter first in my imagination, an opportunity or a challenge?",
+      "option1": "Opportunity",
+      "option2": "Challenge"
+    },
+    {
+      "question": "Am I thinking about something tangible or conceptual?",
+      "option1": "Tangible",
+      "option2": "Conceptual"
+    },
+    {
+      "question": "In my thoughts, is the mysterious island tropical or arctic?",
+      "option1": "Tropical",
+      "option2": "Arctic"
+    },
+    {
+      "question": "Will the next story I create in my mind be happy or sad?",
+      "option1": "Happy",
+      "option2": "Sad"
+    },
+    {
+      "question": "Which imaginary power would I use first if I had all powers, creation or destruction?",
+      "option1": "Creation",
+      "option2": "Destruction"
+    },
+    {
+      "question": "Am I visualizing a new beginning or a final end?",
+      "option1": "New beginning",
+      "option2": "Final end"
+    },
+    {
+      "question": "In my imagination, is the secret garden flourishing or withering?",
+      "option1": "Flourishing",
+      "option2": "Withering"
+    },
+    {
+      "question": "Which will come to mind first when I think of relaxation, a beach or a mountain?",
+      "option1": "Beach",
+      "option2": "Mountain"
+    },
+    {
+      "question": "Am I picturing something static or something dynamic?",
+      "option1": "Static",
+      "option2": "Dynamic"
+    },
+    {
+      "question": "In my mind, is the voice I hear whispering or shouting?",
+      "option1": "Whispering",
+      "option2": "Shouting"
+    },
+    {
+      "question": "Will my next dream be ordinary or extraordinary?",
+      "option1": "Ordinary",
+      "option2": "Extraordinary"
+    },
+    {
+      "question": "Which will I find more appealing in this moment, simplicity or complexity?",
+      "option1": "Simplicity",
+      "option2": "Complexity"
+    },
+    {
+      "question": "Am I thinking of a gentle touch or a firm grip?",
+      "option1": "Gentle touch",
+      "option2": "Firm grip"
+    },
+    {
+      "question": "In my imagination, is the forgotten memory joyful or painful?",
+      "option1": "Joyful",
+      "option2": "Painful"
+    },
+    {
+      "question": "Which will appear in my thoughts first, fire or water?",
+      "option1": "Fire",
+      "option2": "Water"
+    },
+    {
+      "question": "Am I visualizing a straight line or a curved path?",
+      "option1": "Straight line",
+      "option2": "Curved path"
+    },
+    {
+      "question": "In my mind, is the star rising or falling?",
+      "option1": "Rising",
+      "option2": "Falling"
+    },
+    {
+      "question": "Which will I dream about first tonight, people or places?",
+      "option1": "People",
+      "option2": "Places"
+    },
+    {
+      "question": "Am I thinking of something cold or something hot?",
+      "option1": "Cold",
+      "option2": "Hot"
+    },
+    {
+      "question": "In my imagination, is the mystical creature appearing or vanishing?",
+      "option1": "Appearing",
+      "option2": "Vanishing"
+    },
+    {
+      "question": "Will I be more productive in the morning or evening tomorrow?",
+      "option1": "Morning",
+      "option2": "Evening"
+    },
+    {
+      "question": "Which would I choose to explore in my mind, the deepest ocean or the highest mountain?",
+      "option1": "Deepest ocean",
+      "option2": "Highest mountain"
+    },
+    {
+      "question": "Am I picturing a beginning or an ending?",
+      "option1": "Beginning",
+      "option2": "Ending"
+    },
+    {
+      "question": "In my thoughts, is the unexpected discovery helpful or dangerous?",
+      "option1": "Helpful",
+      "option2": "Dangerous"
+    },
+    {
+      "question": "Which will I notice first when entering a room, the light or the space?",
+      "option1": "Light",
+      "option2": "Space"
+    },
+    {
+      "question": "Am I imagining something familiar or something strange?",
+      "option1": "Familiar",
+      "option2": "Strange"
+    },
+    {
+      "question": "In my mind, is the bridge connecting or dividing?",
+      "option1": "Connecting",
+      "option2": "Dividing"
+    },
+    {
+      "question": "Will my first thought tomorrow be about the present or the future?",
+      "option1": "Present",
+      "option2": "Future"
+    },
+    {
+      "question": "Which would I prefer in my imagination, eternal youth or infinite wisdom?",
+      "option1": "Eternal youth",
+      "option2": "Infinite wisdom"
+    },
+    {
+      "question": "Am I thinking of something possible or impossible?",
+      "option1": "Possible",
+      "option2": "Impossible"
+    },
+    {
+      "question": "In my next creative vision, will I imagine earth or space?",
+      "option1": "Earth",
+      "option2": "Space"
+    },
+    {
+      "question": "Which will I remember more clearly from yesterday, a sound or an image?",
+      "option1": "Sound",
+      "option2": "Image"
+    },
+    {
+      "question": "Am I picturing a path leading forward or backward?",
+      "option1": "Forward",
+      "option2": "Backward"
+    },
+    {
+      "question": "In my imagination, is the mysterious box empty or full?",
+      "option1": "Empty",
+      "option2": "Full"
+    },
+    {
+      "question": "Will I think more about actions or feelings in my next reflection?",
+      "option1": "Actions",
+      "option2": "Feelings"
+    },
+    {
+      "question": "Which would I be drawn to first in my mind, a puzzle or a story?",
+      "option1": "Puzzle",
+      "option2": "Story"
+    },
+    {
+      "question": "Am I visualizing movement upward or downward?",
+      "option1": "Upward",
+      "option2": "Downward"
+    },
+    {
+      "question": "In my thoughts, is the ancient wisdom forgotten or remembered?",
+      "option1": "Forgotten",
+      "option2": "Remembered"
+    },
+    {
+      "question": "Which will catch my attention first the next time I'm outside, the sky or the ground?",
+      "option1": "Sky",
+      "option2": "Ground"
+    },
+    {
+      "question": "Am I thinking of something visible or invisible?",
+      "option1": "Visible",
+      "option2": "Invisible"
+    },
+    {
+      "question": "In my imagination, is the hidden truth beautiful or terrifying?",
+      "option1": "Beautiful",
+      "option2": "Terrifying"
+    },
+    {
+      "question": "Will my next big idea come while I'm active or at rest?",
+      "option1": "Active",
+      "option2": "At rest"
+    },
+    {
+      "question": "Which would I find more appealing right now in my mind, chaos or order?",
+      "option1": "Chaos",
+      "option2": "Order"
+    },
+    {
+      "question": "Am I picturing a journey outward or inward?",
+      "option1": "Outward",
+      "option2": "Inward"
+    },
+    {
+      "question": "In my mind, is the lost treasure valuable for its history or its material worth?",
+      "option1": "History",
+      "option2": "Material worth"
+    },
+    {
+      "question": "Which will dominate my dreams tonight, people I know or strangers?",
+      "option1": "People I know",
+      "option2": "Strangers"
+    },
+    {
+      "question": "Am I thinking about the internal or the external?",
+      "option1": "Internal",
+      "option2": "External"
+    },
+    {
+      "question": "In my imagination, is the distant sound growing louder or fading away?",
+      "option1": "Growing louder",
+      "option2": "Fading away"
+    },
+    {
+      "question": "Will I be more decisive or more contemplative tomorrow?",
+      "option1": "Decisive",
+      "option2": "Contemplative"
+    },
+    {
+      "question": "Which would I choose first if given magic powers, healing or transformation?",
+      "option1": "Healing",
+      "option2": "Transformation"
+    },
+    {
+      "question": "Am I visualizing a world at peace or a world at war?",
+      "option1": "World at peace",
+      "option2": "World at war"
+    },
+    {
+      "question": "In my thoughts, is the mysterious energy creative or destructive?",
+      "option1": "Creative",
+      "option2": "Destructive"
+    },
+    {
+      "question": "Which will I notice first about the next room I enter, its color or its size?",
+      "option1": "Color",
+      "option2": "Size"
+    },
+    {
+      "question": "Am I thinking of a journey that's beginning or ending?",
+      "option1": "Beginning",
+      "option2": "Ending"
+    },
+    {
+      "question": "In my mind, is the revelation surprising or expected?",
+      "option1": "Surprising",
+      "option2": "Expected"
+    },
+    {
+      "question": "Will I feel more energetic in the morning or evening tomorrow?",
+      "option1": "Morning",
+      "option2": "Evening"
+    },
+    {
+      "question": "Which would I prefer to encounter in my imagination, a ghost or an alien?",
+      "option1": "Ghost",
+      "option2": "Alien"
+    },
+    {
+      "question": "Am I picturing something temporary or permanent?",
+      "option1": "Temporary",
+      "option2": "Permanent"
+    },
+    {
+      "question": "In my next creative moment, will I focus on details or the big picture?",
+      "option1": "Details",
+      "option2": "Big picture"
+    },
+    {
+      "question": "Which will I think about first when I wake up, what I've accomplished or what I need to do?",
+      "option1": "What I've accomplished",
+      "option2": "What I need to do"
+    },
+    {
+      "question": "Am I visualizing movement that's fast or slow?",
+      "option1": "Fast",
+      "option2": "Slow"
+    },
+    {
+      "question": "In my imagination, is the secret meeting happening at dawn or dusk?",
+      "option1": "Dawn",
+      "option2": "Dusk"
+    },
+    {
+      "question": "Will the next spontaneous memory I recall make me laugh or reflect?",
+      "option1": "Laugh",
+      "option2": "Reflect"
+    },
+    {
+      "question": "Which imaginary superpower would I activate first, super strength or super speed?",
+      "option1": "Super strength",
+      "option2": "Super speed"
+    },
+    {
+      "question": "Am I thinking about the tangible or the abstract?",
+      "option1": "Tangible",
+      "option2": "Abstract"
+    },
+    {
+      "question": "In my mind, is the unknown territory inviting or foreboding?",
+      "option1": "Inviting",
+      "option2": "Foreboding"
+    },
+    {
+      "question": "Which will I dream about tonight, the familiar or the strange?",
+      "option1": "Familiar",
+      "option2": "Strange"
+    },
+    {
+      "question": "Am I picturing a world that's expanding or contracting?",
+      "option1": "Expanding",
+      "option2": "Contracting"
+    },
+    {
+      "question": "In my imagination, is the hidden truth liberating or restricting?",
+      "option1": "Liberating",
+      "option2": "Restricting"
+    },
+    {
+      "question": "Will my next major decision be based on logic or intuition?",
+      "option1": "Logic",
+      "option2": "Intuition"
+    },
+    {
+      "question": "Which would I rather explore in my mind right now, the stars or the sea?",
+      "option1": "Stars",
+      "option2": "Sea"
+    }
+  ]

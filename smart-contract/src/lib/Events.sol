@@ -2,15 +2,27 @@
 pragma solidity ^0.8.13;
 
 library Events {
-    event PlayerRegistered(address indexed player, string username);
-      event MatchCreated(
-        uint indexed poolId,
-        uint roiYes,
-        uint roiNo,
-        uint deadline
+    event QuestionCreated(
+        uint256 questionId,
+        string text,
+        uint256 duration,
+        uint256 resolutionWindow,
+        uint256 timeLimit
     );
-    event AnswerSet(
-        uint indexed poolId,
-        uint answer
-    );   
+    event PredictionSubmitted(
+        address player,
+        uint256 questionId,
+        uint256 answer,
+        uint256 stakeAmount
+    );
+    event QuestionResolved(uint256 questionId, uint256 correctAnswer);
+    event UsernameSet(address player, string username);
+    event StreakReward(
+        address player,
+        uint256 streakLength,
+        uint256 rewardPoints
+    );
+    event RewardDistributed(address player, uint256 rewardAmount);
+    event StakedForQuestions(address player, uint256 stakeAmount);
+    event StakingAmountSet(uint256 currentSet, uint256 amount);
 }
