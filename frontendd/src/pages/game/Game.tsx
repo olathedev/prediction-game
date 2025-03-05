@@ -8,12 +8,23 @@ import TimeOver from "../../components/TimeOver"; // Import TimeOver component
 import { useGuessGame } from "../../hooks/use-contract.hook";
 import toast from "react-hot-toast";
 import InfoScreen from "../../components/InfoScreen";
+import { Howl } from "howler";
+import startSound from "../../assets/sounds/start.mp3";
 
 const Game = () => {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const { submitPredictions } = useGuessGame();
   const [showInfoScreen, setShowInfoScreen] = useState(true);
+
+  // sound play
+  useEffect(() => {
+    const sound = new Howl({
+      src: [startSound],
+      volume: 2,
+    });
+    sound.play();
+  }, [showInfoScreen]);
 
   const {
     questions,
@@ -87,9 +98,16 @@ const Game = () => {
           {!gameOver ? (
             <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] mt-12">
               {/* Timer */}
-              <div className="absolute top-10 right-12 text-white text-3xl font-bold  rounded-full">
-                {timer}s
-              </div>
+                  <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className={`absolute top-10 right-12 text-3xl font-bold rounded-full px-4 py-2 ${
+                    timer <= 15 ? "bg-red-500 text-white" : "bg-white text-black"
+                  } shadow-lg`}
+                  >
+                  {timer}s
+                  </motion.div>
 
               {/* Question */}
               <motion.h2
