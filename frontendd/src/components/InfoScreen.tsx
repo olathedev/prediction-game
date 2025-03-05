@@ -14,7 +14,7 @@ const InfoScreen = ({ onClose }: Props) => {
       transition={{ duration: 0.5, type: "spring", ease: "backInOut" }}
       className="fixed inset-0 bg-black/50 flex items-center justify-center"
     >
-      <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] mt-12">
+      <div className="bg-custom-gradient p-8 relative flex md:h-[26rem] w-[22rem] md:w-[35rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] mt-12">
         <h2 className="text-3xl font-bold text-white">Get Ready!</h2>
         <p className="text-[22px] text-gray-300 text-center">
           Hey there, Player! Get ready to dive into an exciting challenge where
