@@ -6,22 +6,16 @@ import { useGuessGame } from "../hooks/use-contract.hook";
 import { useEffect } from "react";
 
 const TimeOver = () => {
-  const { submitPredictions, isPending, transactionStatus } = useGuessGame();
-  const { userAnswers } = useGame();
+  const { isPending, transactionStatus } = useGuessGame();
+  const { restartGame } = useGame();
   const navigate = useNavigate();
 
   const onClose = () => {
-    navigate('/')
-  }
-
-  useEffect(() => {
-    if (transactionStatus === "success") {
-      navigate("/");
-    }
-  }, [transactionStatus, navigate]);
+    restartGame();
+    navigate("/");
+  };
 
   return (
-    
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -41,7 +35,6 @@ const TimeOver = () => {
           className="uppercase w-full"
           onClick={onClose}
         />
-    
       </div>
     </motion.div>
   );

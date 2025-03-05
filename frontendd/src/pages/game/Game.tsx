@@ -21,6 +21,7 @@ const Game = () => {
     nextQuestion,
     gameOver,
     userAnswers,
+    restartGame,
   } = useGame();
   const [predictions, setPredictions] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
