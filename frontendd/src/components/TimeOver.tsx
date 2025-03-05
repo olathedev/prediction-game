@@ -11,8 +11,8 @@ const TimeOver = () => {
   const navigate = useNavigate();
 
   const onClose = () => {
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   useEffect(() => {
     if (transactionStatus === "success") {
@@ -21,7 +21,6 @@ const TimeOver = () => {
   }, [transactionStatus, navigate]);
 
   return (
-    
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -41,7 +40,6 @@ const TimeOver = () => {
           className="uppercase w-full"
           onClick={onClose}
         />
-    
       </div>
     </motion.div>
   );
