@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import { useGame } from "../../context/GameContext";
 import GameOverModal from "../../components/GameOver";
-import TimeOver from "../../components/TimeOver"; // Import TimeOver component
+import TimeOver from "../../components/TimeOver"; 
 import { useGuessGame } from "../../hooks/use-contract.hook";
 import toast from "react-hot-toast";
 import InfoScreen from "../../components/InfoScreen";
+import { Howl } from "howler";
+import startSound from "../../assets/sounds/start.mp3";
+import timerElapseSound from "../../assets/sounds/game-over.mp3"; 
 
 const Game = () => {
   const navigate = useNavigate();
@@ -15,12 +18,21 @@ const Game = () => {
   const { submitPredictions } = useGuessGame();
   const [showInfoScreen, setShowInfoScreen] = useState(true);
 
+  useEffect(() => {
+    const sound = new Howl({
+      src: [startSound],
+      volume: 2,
+    });
+    sound.play();
+  }, [showInfoScreen]);
+
   const {
     questions,
     currentQuestionIndex,
     nextQuestion,
     gameOver,
     userAnswers,
+    restartGame,
   } = useGame();
   const [predictions, setPredictions] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -54,6 +66,12 @@ const Game = () => {
         setTimer((prev) => prev - 1);
       }, 1000);
       return () => clearInterval(interval);
+    } else if (timer === 0) {
+      const timerSound = new Howl({
+        src: [timerElapseSound],
+        volume: 1,
+      });
+      timerSound.play();
     }
   }, [timer, showInfoScreen]);
 
@@ -86,9 +104,16 @@ const Game = () => {
           {!gameOver ? (
             <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] mt-12">
               {/* Timer */}
-              <div className="absolute top-10 right-12 text-white text-3xl font-bold  rounded-full">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className={`absolute top-10 right-12 text-3xl font-bold rounded-full px-4 py-2 ${
+                  timer <= 15 ? "bg-red-500 text-white" : "bg-white text-black"
+                } shadow-lg`}
+              >
                 {timer}s
-              </div>
+              </motion.div>
 
               {/* Question */}
               <motion.h2

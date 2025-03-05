@@ -6,11 +6,12 @@ import { useGuessGame } from "../hooks/use-contract.hook";
 import { useEffect } from "react";
 
 const TimeOver = () => {
-  const { submitPredictions, isPending, transactionStatus } = useGuessGame();
-  const { userAnswers } = useGame();
+  const { isPending, transactionStatus } = useGuessGame();
+  const { restartGame } = useGame();
   const navigate = useNavigate();
 
-  const onClose = () => {
+const onClose = () => {
+    restartGame();
     navigate("/");
   };
 
