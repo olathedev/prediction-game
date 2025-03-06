@@ -8,7 +8,7 @@ import TimeOver from "./TimeOver";
 import Button from "./Button";
 import GameOverModal from "./GameOver";
 
-const Question = ({ timer }: {timer: number}) => {
+const Question = ({ timer }: { timer: number }) => {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const { submitPredictions } = useGuessGame();

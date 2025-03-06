@@ -36,11 +36,11 @@ const GameOverModal = ({ onClose }: GameOverModalProps) => {
         <h2 className="text-3xl font-bold text-white">Game Over</h2>
         <p className="text-lg text-gray-300">You've completed 10 questions!</p>
 
-          <Button
-            name={isPending ? "Processing" : "View Results"}
-            className="uppercase w-full"
-            onClick={handleClick}
-          />  
+        <Button
+          name={isPending ? "Processing" : "View Results"}
+          className="uppercase w-full"
+          onClick={handleClick}
+        />
         <button
           onClick={onClose}
           className="mt-2 text-gray-300 hover:text-white transition"

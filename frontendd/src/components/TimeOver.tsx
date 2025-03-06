@@ -10,10 +10,16 @@ const TimeOver = () => {
   const { restartGame } = useGame();
   const navigate = useNavigate();
 
-  const onClose = () => {
+const onClose = () => {
     restartGame();
     navigate("/");
   };
+
+  useEffect(() => {
+    if (transactionStatus === "success") {
+      navigate("/");
+    }
+  }, [transactionStatus, navigate]);
 
   return (
     <motion.div
