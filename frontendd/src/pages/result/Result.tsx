@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../../components/Button";
+import { useGuessGame } from "../../hooks/use-contract.hook";
 
 const Results = () => {
   const navigate = useNavigate();
+    const { latestGameResult } = useGuessGame();
+  
+  console.log(latestGameResult);
 
   // Mocked data: Replace with real answers from state or API
   const results = [
