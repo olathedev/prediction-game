@@ -7,6 +7,7 @@ import "./lib/Errors.sol";
 contract GuessGame {
     // State Variables
     address public owner;
+    uint8 public constant MAX_NUMBER_OF_LEVELS = 10;
     uint256 public constant QUESTIONS_PER_GAME = 10;
     uint256 public constant POINTS_PER_CORRECT_ANSWER = 10;
     uint256 public constant STREAK_REWARD_POINTS = 50;
@@ -20,7 +21,7 @@ contract GuessGame {
         uint256 totalCorrect;
         uint256 currentStreak;
         uint256 stakedAmount;
-        bool hasPlayed;
+        // bool hasPlayed;
     }
 
     struct GameResult {
@@ -32,6 +33,7 @@ contract GuessGame {
 
     mapping(address => Player) public players;
     address[] public allPlayers;
+    mapping(address => uint8) public gameLevels;
     mapping(uint256 => GameResult[]) public gameResults; // Per-game leaderboard
     mapping(address => uint256[QUESTIONS_PER_GAME]) public userPredictions;
     mapping(address => uint256[QUESTIONS_PER_GAME]) public correctAnswers;
@@ -73,12 +75,14 @@ contract GuessGame {
     }
 
     function submitPredictions(uint256[QUESTIONS_PER_GAME] memory answers) external payable {
-        require(!players[msg.sender].hasPlayed, "Already played");
+        // require(!players[msg.sender].hasPlayed, "Already played");
+        require(gameLevels[msg.sender] < 10, "Level already completed");
         require(msg.value > 0, "Must stake some ETH");
 
         userPredictions[msg.sender] = answers;
         players[msg.sender].stakedAmount = msg.value;
-        players[msg.sender].hasPlayed = true;
+        // players[msg.sender].hasPlayed = true;
+        gameLevels[msg.sender] += 1;
 
         _generateCorrectAnswers();
         emit PredictionsSubmitted(msg.sender, answers);
@@ -86,7 +90,7 @@ contract GuessGame {
 
     function _generateCorrectAnswers() internal {
         address player = msg.sender;
-        require(players[player].hasPlayed, "Player has not played");
+        // require(players[player].hasPlayed, "Player has not played");
 
         uint256[QUESTIONS_PER_GAME] memory generatedAnswers;
         for (uint256 i = 0; i < QUESTIONS_PER_GAME; i++) {
