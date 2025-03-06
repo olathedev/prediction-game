@@ -91,7 +91,7 @@ contract GuessGame {
 
     function submitPredictions(
         uint256[QUESTIONS_PER_GAME] memory answers
-    ) external returns (GameResult memory) {
+    ) external () {
         require(players[msg.sender].hasStaked, "Must stake before predicting");
 
         userPredictions[msg.sender] = answers;
@@ -100,10 +100,12 @@ contract GuessGame {
 
         currentGameId++;
 
-        emit PredictionsSubmitted(msg.sender, answers, latestResult);
-        return latestResult;
-    }
+        players[msg.sender].hasStaked = true;
 
+        emit PredictionsSubmitted(msg.sender, answers, latestResult);
+
+        
+    }
 
     function _generateCorrectAnswers() internal returns (GameResult memory) {
         address player = msg.sender;
