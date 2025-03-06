@@ -25,6 +25,7 @@
     "wagmi": "^2.14.12"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.12",
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

@@ -5,7 +5,6 @@ import Button from "../../components/Button";
 import { useGame } from "../../context/GameContext";
 import GameOverModal from "../../components/GameOver";
 import TimeOver from "../../components/TimeOver"; 
-import { useGuessGame } from "../../hooks/use-contract.hook";
 import toast from "react-hot-toast";
 import InfoScreen from "../../components/InfoScreen";
 import { Howl } from "howler";
@@ -15,7 +14,6 @@ import timerElapseSound from "../../assets/sounds/game-over.mp3";
 const Game = () => {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const { submitPredictions } = useGuessGame();
   const [showInfoScreen, setShowInfoScreen] = useState(true);
 
   useEffect(() => {
@@ -35,6 +33,7 @@ const Game = () => {
     restartGame,
   } = useGame();
   const [predictions, setPredictions] = useState<number[]>([]);
+  console.log(predictions);
   const [showModal, setShowModal] = useState(false);
   const [timer, setTimer] = useState(60); // Timer state
   const currentQuestion = questions[currentQuestionIndex];
@@ -55,10 +54,10 @@ const Game = () => {
     if (showInfoScreen) return;
 
     if (gameOver) {
-      submitPredictions(predictions, 0.01);
       setShowModal(true);
     }
   }, [gameOver, showInfoScreen]);
+ 
 
   useEffect(() => {
     if (!showInfoScreen && timer > 0) {
@@ -92,7 +91,7 @@ const Game = () => {
   return (
     <>
       {showInfoScreen ? (
-        <InfoScreen onClose={() => setShowInfoScreen(false)} />
+        <InfoScreen onClose={() => {  restartGame();setShowInfoScreen(false); }} />
       ) : (
         <motion.section
           initial={{ opacity: 0, scale: 0.9 }}

@@ -1,26 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../../components/Button";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { useGuessGame } from "../../hooks/use-contract.hook";
 import { PlayerData } from "../../interface";
 import toast from "react-hot-toast";
+import { useGame } from "../../context/GameContext";
 
 const Home = () => {
   const navigate = useNavigate();
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  // const { disconnect } = useDisconnect();
   const { playerData } = useGuessGame() as { playerData: PlayerData | null };
-
+  const { restartGame } = useGame();
   const handleStartGame = async () => {
     if (!isConnected) {
       toast.error("Please connect your wallet first.");
       connect({ connector: connectors[0] });
       return;
     }
-
+  
     if (playerData?.username) {
+      restartGame()
       navigate("/game");
     } else {
       navigate("/username");
