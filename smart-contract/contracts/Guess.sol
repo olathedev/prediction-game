@@ -80,7 +80,7 @@ contract GuessGame {
         emit UsernameSet(msg.sender, _username);
     }
 
-       function stake() external payable {
+    function stake() external payable {
         require(msg.value > 0, "Must stake some ETH");
 
         players[msg.sender].stakedAmount = msg.value;
@@ -228,4 +228,11 @@ contract GuessGame {
 
         return leaderboard;
     }
+
+
+    function getPlayerScores(address playerAddress) public view returns (uint256 totalPoints, uint256 totalCorrect) {
+        Player memory player = players[playerAddress];
+        return (player.totalPoints, player.totalCorrect);
+    }
+
 }
