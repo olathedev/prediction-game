@@ -80,6 +80,15 @@ contract GuessGame {
         emit UsernameSet(msg.sender, _username);
     }
 
+       function stake() external payable {
+        require(msg.value > 0, "Must stake some ETH");
+
+        players[msg.sender].stakedAmount = msg.value;
+        players[msg.sender].hasStaked = true;
+
+        emit Staked(msg.sender, msg.value);
+    }
+
     function submitPredictions(
         uint256[QUESTIONS_PER_GAME] memory answers
     ) external returns (GameResult memory) {
@@ -95,14 +104,6 @@ contract GuessGame {
         return latestResult;
     }
 
-    function stake() external payable {
-        require(msg.value > 0, "Must stake some ETH");
-
-        players[msg.sender].stakedAmount = msg.value;
-        players[msg.sender].hasStaked = true;
-
-        emit Staked(msg.sender, msg.value);
-    }
 
     function _generateCorrectAnswers() internal returns (GameResult memory) {
         address player = msg.sender;
