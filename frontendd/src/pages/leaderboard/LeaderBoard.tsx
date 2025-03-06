@@ -2,13 +2,17 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaMedal } from "react-icons/fa";
 import Button from "../../components/Button";
-import { useGuessGame } from "../../hooks/use-contract.hook"; 
+import { useGuessGame } from "../../hooks/use-contract.hook";
 
 const medals = ["gold", "silver", "bronze"];
 
 const LeaderBoard = () => {
-  const { gameLeaderboard } = useGuessGame() as { gameLeaderboard: { username: string; totalPoints: number; }[] }; 
+  const { gameLeaderboard } = useGuessGame() as {
+    gameLeaderboard: { username: string; totalPoints: number }[];
+    globalLeaderboard: { username: string; totalPoints: number }[];
+  };
 
+  console.log("==>", gameLeaderboard);
   return (
     <motion.section
       initial={{ scale: 0 }}
@@ -22,22 +26,33 @@ const LeaderBoard = () => {
 
         {gameLeaderboard && gameLeaderboard.length > 0 ? (
           <div className="w-full flex flex-col gap-2">
-            {gameLeaderboard.map((player: { username: string; totalPoints: number; }, index: number) => (
-              <div
-                key={player.username}
-                className="flex items-center justify-between p-3 rounded-xl bg-black/20 text-xl"
-              >
-                <div className="flex items-center gap-3">
-                  {index < 3 ? (
-                    <FaMedal className={`text-${medals[index]}-500 text-2xl`} />
-                  ) : (
-                    <span className="text-gray-300 text-2xl">{index + 1}</span>
-                  )}
-                  <span>{player.username}</span>
+            {gameLeaderboard.map(
+              (
+                player: { username: string; totalPoints: number },
+                index: number
+              ) => (
+                <div
+                  key={player.username + index}
+                  className="flex items-center justify-between p-3 rounded-xl bg-black/20 text-xl"
+                >
+                  <div className="flex items-center gap-3">
+                    {index < 3 ? (
+                      <FaMedal
+                        className={`text-${medals[index]}-500 text-2xl`}
+                      />
+                    ) : (
+                      <span className="text-gray-300 text-2xl">
+                        {index + 1}
+                      </span>
+                    )}
+                    <span>{player.username}</span>
+                  </div>
+                  <span className="text-yellow-500 font-bold">
+                    {player.totalPoints}
+                  </span>
                 </div>
-                <span className="text-yellow-500 font-bold">{player.totalPoints}</span>
-              </div>
-            ))}
+              )
+            )}
           </div>
         ) : (
           <p className="text-white text-xl">No leaderboard data available</p>
