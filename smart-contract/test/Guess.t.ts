@@ -25,6 +25,11 @@ describe("GuessGame Contract", function () {
   });
 
   describe("Username Registration", function () {
+    it("should not allow withdrawal if results are not generated", async function () {
+      await expect(
+        guessGame.connect(player1).withdrawStake()
+      ).to.be.revertedWith("No games played yet");
+    });
     it("should allow players to set a unique username", async function () {
       await expect(guessGame.connect(player1).setUsername("PlayerOne"))
         .to.emit(guessGame, "UsernameSet")
@@ -83,6 +88,10 @@ describe("GuessGame Contract", function () {
       const gameIdAfter = await guessGame.currentGameId();
       expect(Number(gameIdAfter)).to.equal(Number(gameIdBefore) + 1);
     });
+    it("should get player result", async function () {
+      const result = await guessGame.connect(player1).getPlayerLatestGameResult(player1Address);
+      console.log({result})
+    })
   });
 
   describe("Stake Withdrawal (Security & Reentrancy Check)", function () {
@@ -98,16 +107,16 @@ describe("GuessGame Contract", function () {
     });
 
     it("should not allow withdrawing twice", async function () {
+      const getUser = await guessGame.connect(player1).getPlayerLatestGameResult(player2Address);
+      console.log({getUser})
+
+
       await expect(
         guessGame.connect(player1).withdrawStake()
       ).to.be.revertedWith("No stake to withdraw");
     });
 
-    it("should not allow withdrawal if results are not generated", async function () {
-      await expect(
-        guessGame.connect(player2).withdrawStake()
-      ).to.be.revertedWith("No games played yet");
-    });
+    
   });
 
   describe("Leaderboard Management", function () {
