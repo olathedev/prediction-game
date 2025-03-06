@@ -18,6 +18,7 @@ contract GuessGame {
         uint256 totalPoints;
         uint256 totalCorrect;
         uint256 stakedAmount;
+        bool hasStaked;
     }
 
     struct GameResult {
@@ -46,6 +47,7 @@ contract GuessGame {
         GameResult result
     );
     event StakeWithdrawn(address indexed player, uint256 amount);
+    event Staked(address indexed player, uint256 amount);
 
     constructor() {
         owner = msg.sender;
@@ -80,11 +82,10 @@ contract GuessGame {
 
     function submitPredictions(
         uint256[QUESTIONS_PER_GAME] memory answers
-    ) external payable returns (GameResult memory) {
-        require(msg.value > 0, "Must stake some ETH");
+    ) external returns (GameResult memory) {
+        require(players[msg.sender].hasStaked, "Must stake before predicting");
 
         userPredictions[msg.sender] = answers;
-        players[msg.sender].stakedAmount = msg.value;
 
         GameResult memory latestResult = _generateCorrectAnswers();
 
@@ -92,6 +93,15 @@ contract GuessGame {
 
         emit PredictionsSubmitted(msg.sender, answers, latestResult);
         return latestResult;
+    }
+
+    function stake() external payable {
+        require(msg.value > 0, "Must stake some ETH");
+
+        players[msg.sender].stakedAmount = msg.value;
+        players[msg.sender].hasStaked = true;
+
+        emit Staked(msg.sender, msg.value);
     }
 
     function _generateCorrectAnswers() internal returns (GameResult memory) {
