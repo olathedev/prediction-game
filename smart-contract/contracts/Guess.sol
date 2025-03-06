@@ -31,7 +31,7 @@ contract GuessGame {
         uint256[QUESTIONS_PER_GAME] userPredictions;
     }
 
-    // Mappings
+    // Mappingsgit push --set-upstream origin show
     mapping(address => Player) public players;
     mapping(address => GameResult[]) public playerGameResults;
     mapping(address => uint256[QUESTIONS_PER_GAME]) public userPredictions;
