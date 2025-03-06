@@ -91,45 +91,20 @@ contract GuessGame {
 
     function submitPredictions(
         uint256[QUESTIONS_PER_GAME] memory answers
-    ) external () {
+    ) external returns (GameResult memory) {
         require(players[msg.sender].hasStaked, "Must stake before predicting");
 
         userPredictions[msg.sender] = answers;
-
-        GameResult memory latestResult = _generateCorrectAnswers();
+        resultsGenerated[msg.sender] = true;
+        players[msg.sender].hasStaked = true;
 
         currentGameId++;
 
-        players[msg.sender].hasStaked = true;
+        GameResult memory latestResult = _calculateScore(msg.sender);
 
         emit PredictionsSubmitted(msg.sender, answers, latestResult);
 
-        
-    }
-
-    function _generateCorrectAnswers() internal returns (GameResult memory) {
-        address player = msg.sender;
-        uint256[QUESTIONS_PER_GAME] memory generatedAnswers;
-
-        for (uint256 i = 0; i < QUESTIONS_PER_GAME; i++) {
-            generatedAnswers[i] =
-                uint256(
-                    keccak256(
-                        abi.encodePacked(
-                            block.timestamp,
-                            block.prevrandao,
-                            player,
-                            i
-                        )
-                    )
-                ) %
-                2;
-        }
-
-        correctAnswers[player] = generatedAnswers;
-        resultsGenerated[player] = true;
-
-        return _calculateScore(player);
+        return latestResult;
     }
 
     function _calculateScore(
@@ -231,10 +206,10 @@ contract GuessGame {
         return leaderboard;
     }
 
-
-    function getPlayerScores(address playerAddress) public view returns (uint256 totalPoints, uint256 totalCorrect) {
+    function getPlayerScores(
+        address playerAddress
+    ) public view returns (uint256 totalPoints, uint256 totalCorrect) {
         Player memory player = players[playerAddress];
         return (player.totalPoints, player.totalCorrect);
     }
-
 }
