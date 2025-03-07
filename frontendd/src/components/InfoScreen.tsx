@@ -9,29 +9,30 @@ interface Props {
 }
 
 const InfoScreen = ({ onClose }: Props) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { setQuestions } = useGame();
   const [loading, setLoading] = useState(false);
-  console.log(loading)
+
   const onStart = async () => {
+    if (loading) return; 
+
     setLoading(true);
     try {
       const res = await fetch(
         "https://prediction-api-1.onrender.com/api/create-question"
       );
       const data = await res.json();
-      setLoading(false);
       if (res.ok) {
         setQuestions(data?.questions);
         onClose();
       }
-
-      console.log(data);
     } catch (error) {
       console.error(error);
+    } finally {
       setLoading(false);
     }
   };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -45,21 +46,32 @@ const InfoScreen = ({ onClose }: Props) => {
           Get Ready! Please read!
         </h2>
         <p className="text-[22px] text-gray-300 text-center">
-          Hey there, Player! in this challanege you'll need to answer 10
-          predictive questions, and would be required to stake{" "}
-          <span className="text-yellow-500">0.02 core tokens</span> you'll get
-          back double of your stake if you get 8 predicitons right. You've got
-          just 45 seconds to showcase your skills and beat the clock or loose
-          your stake, Remember, time waits for no one, so stay sharp and have
-          fun! Good luck!
+          Hey there, Player! In this challenge, you'll need to answer 10
+          predictive questions and stake{" "}
+          <span className="text-yellow-500">0.02 CORE tokens</span>. If you get
+          8 predictions right, you'll double your stake. You've got just 45
+          seconds to showcase your skills and beat the clock. Remember, time
+          waits for no one, so stay sharp and have fun! Good luck!
         </p>
-        <div className="mt-2" onClick={onStart}>
+
+        {/* Play Button with Loading State */}
+        <div
+          className={`mt-2 relative ${
+            loading ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+          }`}
+          onClick={!loading ? onStart : undefined}
+        >
           <PlayButton />
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full">
+              <div className="animate-spin border-4 border-white border-t-transparent rounded-full w-8 h-8"></div>
+            </div>
+          )}
         </div>
 
         <button
-          onClick={() => navigate('/')}
-          className=" text-gray-300 cursor-pointer text-xl hover:text-white transition"
+          onClick={() => navigate("/")}
+          className="text-gray-300 cursor-pointer text-xl hover:text-white transition"
         >
           Exit game
         </button>
