@@ -31,7 +31,6 @@ contract GuessGame {
         uint256[QUESTIONS_PER_GAME] userPredictions;
     }
 
-    // Mappingsgit push --set-upstream origin show
     mapping(address => Player) public players;
     mapping(address => GameResult[]) public playerGameResults;
     mapping(address => uint256[QUESTIONS_PER_GAME]) public userPredictions;
@@ -41,13 +40,15 @@ contract GuessGame {
 
     // Events
     event UsernameSet(address indexed player, string username);
-    event PredictionsSubmitted(
-        address indexed player,
-        uint256[QUESTIONS_PER_GAME] answers,
-        GameResult result
-    );
+    event PredictionsSubmitted(address indexed player, uint256[QUESTIONS_PER_GAME] answers, GameResult result);
     event StakeWithdrawn(address indexed player, uint256 amount);
     event Staked(address indexed player, uint256 amount);
+    event OwnerWithdrawn(address indexed owner, uint256 amount);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not contract owner");
+        _;
+    }
 
     constructor() {
         owner = msg.sender;
@@ -60,16 +61,12 @@ contract GuessGame {
         // Ensure username is unique
         for (uint256 i = 0; i < allPlayers.length; i++) {
             require(
-                keccak256(bytes(players[allPlayers[i]].username)) !=
-                    keccak256(bytes(_username)),
+                keccak256(bytes(players[allPlayers[i]].username)) != keccak256(bytes(_username)),
                 "Username already taken"
             );
         }
 
-        require(
-            bytes(players[msg.sender].username).length == 0,
-            "Username already set"
-        );
+        require(bytes(players[msg.sender].username).length == 0, "Username already set");
 
         if (players[msg.sender].playerAddress == address(0)) {
             players[msg.sender].playerAddress = msg.sender;
@@ -90,12 +87,14 @@ contract GuessGame {
     }
 
     function submitPredictions(
-        uint256[QUESTIONS_PER_GAME] memory answers
-    ) external returns (GameResult memory) {
+        uint256[QUESTIONS_PER_GAME] memory answers,
+        uint256[QUESTIONS_PER_GAME] memory _correctAnswers
+    ) external returns (bool) {
         require(players[msg.sender].hasStaked, "Must stake before predicting");
 
         userPredictions[msg.sender] = answers;
         resultsGenerated[msg.sender] = true;
+        correctAnswers[msg.sender] = _correctAnswers;
         players[msg.sender].hasStaked = true;
 
         currentGameId++;
@@ -104,22 +103,18 @@ contract GuessGame {
 
         emit PredictionsSubmitted(msg.sender, answers, latestResult);
 
-        return latestResult;
+        _withdrawStake(msg.sender);
+
+        return true;
     }
 
-    function _calculateScore(
-        address player
-    ) internal returns (GameResult memory) {
+    function _calculateScore(address player) internal returns (GameResult memory) {
         require(resultsGenerated[player], "Results not generated");
 
         Player storage p = players[player];
         uint256 correctCount = 0;
-        uint256[QUESTIONS_PER_GAME] memory userAnswers = userPredictions[
-            player
-        ];
-        uint256[QUESTIONS_PER_GAME] memory generatedAnswers = correctAnswers[
-            player
-        ];
+        uint256[QUESTIONS_PER_GAME] memory userAnswers = userPredictions[player];
+        uint256[QUESTIONS_PER_GAME] memory generatedAnswers = correctAnswers[player];
 
         for (uint256 i = 0; i < QUESTIONS_PER_GAME; i++) {
             if (userAnswers[i] == generatedAnswers[i]) {
@@ -151,35 +146,26 @@ contract GuessGame {
         return result;
     }
 
-    function getPlayerLatestGameResult(
-        address player
-    ) external view returns (GameResult memory) {
+    function getPlayerLatestGameResult(address player) external view returns (GameResult memory) {
         uint256 gamesPlayed = playerGameResults[player].length;
         require(gamesPlayed > 0, "No games played yet");
         return playerGameResults[player][gamesPlayed - 1];
     }
 
-    function withdrawStake() external {
-        Player storage p = players[msg.sender];
-        require(
-            playerGameResults[msg.sender].length > 0,
-            "No games played yet"
-        );
-        require(resultsGenerated[msg.sender], "Results not generated");
+    function _withdrawStake(address player) internal {
+        Player storage p = players[player];
         require(p.stakedAmount > 0, "No stake to withdraw");
 
         uint256 amount = p.stakedAmount;
         p.stakedAmount = 0;
 
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        (bool success,) = payable(player).call{value: amount}("");
         require(success, "Transfer failed");
 
-        emit StakeWithdrawn(msg.sender, amount);
+        emit StakeWithdrawn(player, amount);
     }
 
-    function getPlayerDetails(
-        address playerAddress
-    ) public view returns (Player memory) {
+    function getPlayerDetails(address playerAddress) public view returns (Player memory) {
         return players[playerAddress];
     }
 
@@ -195,10 +181,7 @@ contract GuessGame {
         for (uint256 i = 0; i < playerCount; i++) {
             for (uint256 j = i + 1; j < playerCount; j++) {
                 if (leaderboard[j].totalPoints > leaderboard[i].totalPoints) {
-                    (leaderboard[i], leaderboard[j]) = (
-                        leaderboard[j],
-                        leaderboard[i]
-                    );
+                    (leaderboard[i], leaderboard[j]) = (leaderboard[j], leaderboard[i]);
                 }
             }
         }
@@ -206,10 +189,18 @@ contract GuessGame {
         return leaderboard;
     }
 
-    function getPlayerScores(
-        address playerAddress
-    ) public view returns (uint256 totalPoints, uint256 totalCorrect) {
+    function getPlayerScores(address playerAddress) public view returns (uint256 totalPoints, uint256 totalCorrect) {
         Player memory player = players[playerAddress];
         return (player.totalPoints, player.totalCorrect);
+    }
+
+    function withdrawFromContract() external onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds to withdraw");
+
+        (bool success,) = payable(owner).call{value: balance}("");
+        require(success, "Transfer failed");
+
+        emit OwnerWithdrawn(owner, balance);
     }
 }

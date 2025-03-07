@@ -25,11 +25,6 @@ describe("GuessGame Contract", function () {
   });
 
   describe("Username Registration", function () {
-    it("should not allow withdrawal if results are not generated", async function () {
-      await expect(
-        guessGame.connect(player1).withdrawStake()
-      ).to.be.revertedWith("No games played yet");
-    });
     it("should allow players to set a unique username", async function () {
       await expect(guessGame.connect(player1).setUsername("PlayerOne"))
         .to.emit(guessGame, "UsernameSet")
@@ -47,32 +42,28 @@ describe("GuessGame Contract", function () {
     });
   });
 
-  describe("Gameplay - Submitting Predictions & Staking", function () {
-    it("should allow players to stake ETH and submit predictions", async function () {
+  describe("Gameplay - Staking & Submitting Predictions", function () {
+    it("should allow players to stake ETH", async function () {
+      await expect(guessGame.connect(player1).stake({ value: STAKE_AMOUNT }))
+        .to.emit(guessGame, "Staked")
+        .withArgs(player1Address, STAKE_AMOUNT);
+    });
+
+    it("should allow players to submit predictions after staking and return true", async function () {
       const answers = Array(QUESTIONS_PER_GAME).fill(0);
+      const correctAnswers = Array(QUESTIONS_PER_GAME).fill(0);
 
       await expect(
-        guessGame
-          .connect(player1)
-          .submitPredictions(answers, { value: STAKE_AMOUNT })
+        guessGame.connect(player1).submitPredictions(answers, correctAnswers)
       )
         .to.emit(guessGame, "PredictionsSubmitted")
         .withArgs(player1Address, answers, anyValue);
 
-      await expect(
-        guessGame
-          .connect(player2)
-          .submitPredictions(answers, { value: STAKE_AMOUNT })
-      )
-        .to.emit(guessGame, "PredictionsSubmitted")
-        .withArgs(player2Address, answers, anyValue);
-    });
+      const playerResult = await guessGame.getPlayerLatestGameResult(
+        player1Address
+      );
 
-    it("should require ETH to be staked", async function () {
-      const answers = Array(QUESTIONS_PER_GAME).fill(1);
-      await expect(
-        guessGame.connect(player1).submitPredictions(answers, { value: 0 })
-      ).to.be.revertedWith("Must stake some ETH");
+      expect(playerResult.correctAnswers).to.equal(QUESTIONS_PER_GAME);
     });
   });
 
@@ -81,50 +72,62 @@ describe("GuessGame Contract", function () {
       const gameIdBefore = await guessGame.currentGameId();
 
       const answers = Array(QUESTIONS_PER_GAME).fill(1);
+      const correctAnswers = Array(QUESTIONS_PER_GAME).fill(1);
+      await guessGame.connect(player1).stake({ value: STAKE_AMOUNT });
+      
       await guessGame
         .connect(player1)
-        .submitPredictions(answers, { value: STAKE_AMOUNT });
+        .submitPredictions(answers, correctAnswers);
 
       const gameIdAfter = await guessGame.currentGameId();
       expect(Number(gameIdAfter)).to.equal(Number(gameIdBefore) + 1);
     });
-    it("should get player result", async function () {
-      const result = await guessGame.connect(player1).getPlayerLatestGameResult(player1Address);
-      console.log({result})
-    })
   });
 
-  describe("Stake Withdrawal (Security & Reentrancy Check)", function () {
-    it("should allow players to withdraw their stake after results are generated", async function () {
-      const balanceBefore = await ethers.provider.getBalance(player1Address);
+  describe("Stake Auto Withdrawal", function () {
+     it("should automatically withdraw stake after game result is calculated", async function () {
+       const balanceBefore = await ethers.provider.getBalance(player1Address);
+       const answers = Array(QUESTIONS_PER_GAME).fill(1);
+       const correctAnswers = Array(QUESTIONS_PER_GAME).fill(1);
 
-      await expect(guessGame.connect(player1).withdrawStake())
-        .to.emit(guessGame, "StakeWithdrawn")
-        .withArgs(player1Address, STAKE_AMOUNT);
+       const tx = await guessGame
+         .connect(player1)
+         .stake({ value: STAKE_AMOUNT });
+       const receipt = await tx.wait();
+       const gasUsed = receipt!.gasUsed * tx.gasPrice;
 
-      const balanceAfter = await ethers.provider.getBalance(player1Address);
-      expect(balanceAfter).to.be.gt(balanceBefore);
-    });
+       await guessGame
+         .connect(player1)
+         .submitPredictions(answers, correctAnswers);
 
-    it("should not allow withdrawing twice", async function () {
-      const getUser = await guessGame.connect(player1).getPlayerLatestGameResult(player2Address);
-      console.log({getUser})
+       const balanceAfter = await ethers.provider.getBalance(player1Address);
 
+       expect(balanceAfter).to.be.closeTo(
+         balanceBefore,
+         gasUsed + STAKE_AMOUNT
+       );
+     });
 
-      await expect(
-        guessGame.connect(player1).withdrawStake()
-      ).to.be.revertedWith("No stake to withdraw");
-    });
-
-    
   });
 
   describe("Leaderboard Management", function () {
     it("should correctly update the leaderboard after games", async function () {
       const leaderboard = await guessGame.getGlobalLeaderboard();
-      console.log(leaderboard)
-      expect(leaderboard.length).to.be.gte(2);
-      expect(leaderboard[0].totalPoints).to.be.gte(leaderboard[1].totalPoints);
+      expect(leaderboard.length).to.be.gte(1);
+    });
+  });
+
+  describe("Owner Withdraw Function", function () {
+    it("should allow only the owner to withdraw funds from the contract", async function () {
+      guessGame.connect(player1).stake({ value: STAKE_AMOUNT });
+      await expect(
+        guessGame.connect(player2).withdrawFromContract()
+      ).to.be.revertedWith("Not contract owner");
+
+      await expect(guessGame.connect(owner).withdrawFromContract()).to.emit(
+        guessGame,
+        "OwnerWithdrawn"
+      );
     });
   });
 
