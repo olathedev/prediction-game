@@ -319,6 +319,7 @@ export const useGuessGame = () => {
     });
 
   return {
+    transactionStatus,
     submitPredictions,
     withdrawStake,
     getPlayerDetails,
@@ -327,8 +328,7 @@ export const useGuessGame = () => {
     playerData,
     playerLatestGameResult,
     globalLeaderboard,
-    latestGameResult, // Now available immediately after prediction submission
-    transactionStatus,
+    latestGameResult, 
     isPending,
   };
 };
