@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+
+// @ts-ignore
 import { FaMedal } from "react-icons/fa";
 import Button from "../../components/Button";
 import { useGuessGame } from "../../hooks/use-contract.hook";
