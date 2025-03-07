@@ -10,7 +10,7 @@ import PlayGuide from "./pages/play-guide/PlayGuide";
 
 function App() {
   return (
-    <>
+    <div className="lg:px-0 px-3">
       <Toaster position="top-center" reverseOrder={false} />
       <NavBar />
       <Routes>
@@ -24,7 +24,7 @@ function App() {
 
         {/* <Route path="*" element={<ErrorPage />} /> */}
       </Routes>
-    </>
+    </div>
   );
 }
 
