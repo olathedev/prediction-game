@@ -9,6 +9,7 @@ import {
 import rawAbi from "../abi/GuessGame.json";
 import toast from "react-hot-toast";
 import { parseEther } from "viem";
+import { useNavigate } from "react-router-dom";
 
 const abi = rawAbi.abi;
 const CONTRACT_ADDRESS = "0x530fD6288a8Fb22EbFaE4f47C9FBf2aCeB905022";
@@ -17,7 +18,7 @@ export const useGuessGame = () => {
   const { isConnected, address } = useAccount();
   const { writeContract, isPending } = useWriteContract();
   const { data: balanceData } = useBalance({ address });
-
+  const navigate = useNavigate();
 
   /**
    * Stake ETH before playing.
@@ -50,7 +51,7 @@ export const useGuessGame = () => {
           if (callback) callback();
         },
         onError: () => {
-          toast.error( "Transaction failed. Please try again.");
+          toast.error("Transaction failed. Please try again.");
         },
       }
     );
@@ -71,20 +72,23 @@ export const useGuessGame = () => {
       return;
     }
 
-    try {
-      writeContract({
+    writeContract(
+      {
         address: CONTRACT_ADDRESS,
         abi,
         functionName: "submitPredictions",
         args: [predictions, correctAnswers],
-      });
-
-      toast.success("Predictions submitted successfully!");
-    } catch (err: unknown) {
-      if (err instanceof BaseError) {
-        toast.error(err.shortMessage || err.message);
+      },
+      {
+        onSuccess: () => {
+          toast.success("Predictions submitted successfully!");
+          navigate("/result");
+        },
+        onError: () => {
+          toast.error("Transaction failed. Please try again.");
+        },
       }
-    }
+    );
   };
 
   /**
