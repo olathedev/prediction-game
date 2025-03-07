@@ -20,7 +20,7 @@ const Game = () => {
   useEffect(() => {
     const sound = new Howl({
       src: [startSound],
-      volume: 2,
+      volume: 1,
     });
     sound.play();
   }, [showInfoScreen]);
