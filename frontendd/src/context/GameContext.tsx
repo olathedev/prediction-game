@@ -3,8 +3,9 @@ import questionsData from "../data/question.json"; // Import your JSON file
 
 interface Question {
   question: string;
-  option1: string;
-  option2: string;
+  answer: string | number;
+  options: string[]
+
 }
 
 interface GameContextType {
@@ -14,13 +15,15 @@ interface GameContextType {
   gameOver: boolean;
   nextQuestion: (answer: number) => void;
   restartGame: () => void;
+  getQuestions: () => void;
+  setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
 }
 
 const GameContext = createContext<GameContextType | null>(null);
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);  
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [gameOver, setGameOver] = useState(false);
 
@@ -29,12 +32,20 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const startNewGame = () => {
-    const shuffled = [...questionsData].sort(() => Math.random() - 0.5);
-    setQuestions(shuffled.slice(0, 10));
     setCurrentQuestionIndex(0);
     setUserAnswers([]);
     setGameOver(false);
   };
+
+  const getQuestions = async () => {
+    try {
+      const res = await fetch("https://prediction-api-1.onrender.com/api/create-question")
+      const data = await res.json()
+      console.log(data)
+    } catch (error) {
+      console.error()
+    }
+  }
 
   const nextQuestion = useCallback((answer: number) => {
     setUserAnswers((prev) => [...prev, answer]);
@@ -53,8 +64,10 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       gameOver,
       nextQuestion,
       restartGame: startNewGame,
+      getQuestions,
+      setQuestions
     }),
-    [questions, currentQuestionIndex, userAnswers, gameOver, nextQuestion]
+    [questions, currentQuestionIndex, userAnswers, gameOver, nextQuestion, getQuestions, setQuestions]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

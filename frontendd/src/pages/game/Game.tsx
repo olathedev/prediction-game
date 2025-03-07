@@ -35,14 +35,14 @@ const Game = () => {
   const [predictions, setPredictions] = useState<number[]>([]);
   console.log(predictions);
   const [showModal, setShowModal] = useState(false);
-  const [timer, setTimer] = useState(60); // Timer state
+  const [timer, setTimer] = useState(45); // Timer state
   const currentQuestion = questions[currentQuestionIndex];
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setPredictions((prev) => [
       ...prev,
-      option === currentQuestion?.option1 ? 0 : 1,
+      option === currentQuestion?.options[0] ? 0 : 1,
     ]);
   };
 
@@ -81,7 +81,7 @@ const Game = () => {
     }
 
     setSelectedOption(null);
-    nextQuestion(selectedOption === currentQuestion?.option1 ? 0 : 1);
+    nextQuestion(selectedOption === currentQuestion?.options[0] ? 0 : 1);
   };
 
   if (timer <= 0) {
@@ -135,26 +135,26 @@ const Game = () => {
                   whileTap={{ scale: 0.9 }}
                   whileHover={{ scale: 1.1 }}
                   className={`w-[80%] rounded-[2rem] p-4 text-xl font-semibold  text-white transition-all ${
-                    selectedOption === currentQuestion?.option1
+                    selectedOption === currentQuestion?.options[0] 
                       ? "bg-green-500/60"
                       : "bg-[#000]/30"
                   }`}
-                  onClick={() => handleSelect(currentQuestion?.option1)}
+                  onClick={() => handleSelect(currentQuestion?.options[0])}
                 >
-                  {currentQuestion?.option1}
+                  {currentQuestion?.options[0]}
                 </motion.button>
 
                 <motion.button
                   whileTap={{ scale: 0.9 }}
                   whileHover={{ scale: 1.1 }}
                   className={`w-[80%] rounded-[2rem] p-4 text-xl font-semibold  text-white transition-all ${
-                    selectedOption === currentQuestion?.option2
+                    selectedOption === currentQuestion?.options[1]
                       ? "bg-green-500/60"
                       : "bg-[#000]/30"
                   }`}
-                  onClick={() => handleSelect(currentQuestion?.option2)}
+                  onClick={() => handleSelect(currentQuestion?.options[1])}
                 >
-                  {currentQuestion?.option2}
+                  {currentQuestion?.options[1]}
                 </motion.button>
               </motion.div>
 
