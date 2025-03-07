@@ -1,21 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "./Button";
 import { useGame } from "../context/GameContext";
 import { useGuessGame } from "../hooks/use-contract.hook";
+import { useEffect } from "react";
 
-interface GameOverModalProps {
-  onClose: () => void;
-}
+const TimeOver = () => {
+  const { isPending, transactionStatus } = useGuessGame();
+  const { restartGame } = useGame();
+  const navigate = useNavigate();
 
-const GameOverModal = ({ onClose }: GameOverModalProps) => {
-  const { submitPredictions, isPending } = useGuessGame();
-  const { userAnswers, questions } = useGame();
-
-  const handleClick = () => {
-    const correctAnswers = questions.map((q) => parseInt(q.answer));
-    console.log(userAnswers, correctAnswers);
-    submitPredictions(userAnswers, correctAnswers);
+const onClose = () => {
+    restartGame();
+    navigate("/");
   };
+
+  useEffect(() => {
+    if (transactionStatus === "success") {
+      navigate("/");
+    }
+  }, [transactionStatus, navigate]);
 
   return (
     <motion.div
@@ -27,22 +31,19 @@ const GameOverModal = ({ onClose }: GameOverModalProps) => {
     >
       <div className="bg-custom-gradient p-8 rounded-3xl shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] w-80 md:w-96 text-center flex flex-col items-center gap-4">
         <h2 className="text-3xl font-bold text-white">Game Over</h2>
-        <p className="text-lg text-gray-300">You've completed 10 questions!</p>
+        <p className="text-xl text-gray-300">
+          Time's up! You gave it your best shot, but the clock won this round.
+          you've lost your stake, Better luck next time!
+        </p>
 
         <Button
-          name={isPending ? "Processing" : "View Results"}
+          name={isPending ? "Processing" : "Try again"}
           className="uppercase w-full"
-          onClick={handleClick}
-        />
-        <button
           onClick={onClose}
-          className="mt-2 text-gray-300 hover:text-white transition"
-        >
-          Close
-        </button>
+        />
       </div>
     </motion.div>
   );
 };
 
-export default GameOverModal;
+export default TimeOver;

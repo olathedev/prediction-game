@@ -4,88 +4,95 @@ import {
   useReadContract,
   useAccount,
   BaseError,
+  useBalance,
 } from "wagmi";
 import rawAbi from "../abi/GuessGame.json";
 import toast from "react-hot-toast";
 import { parseEther } from "viem";
+import { useNavigate } from "react-router-dom";
 
 const abi = rawAbi.abi;
-const CONTRACT_ADDRESS = "0x1C388778E6e0D1f6C606a7cbDB16186c560F7b70";
+const CONTRACT_ADDRESS = "0x530fD6288a8Fb22EbFaE4f47C9FBf2aCeB905022";
 
 export const useGuessGame = () => {
   const { isConnected, address } = useAccount();
-  const [transactionStatus, setTransactionStatus] = useState<string | null>(null);
-  const { writeContract, isPending, data: hash, error } = useWriteContract();
-
-  useEffect(() => {
-    if (hash) {
-      setTransactionStatus("success");
-    }
-    if (error) {
-      toast.error(error.message ?? "Transaction failed. Please try again.");
-    }
-  }, [hash, error]);
+  const { writeContract, isPending } = useWriteContract();
+  const { data: balanceData } = useBalance({ address });
+  const navigate = useNavigate();
 
   /**
-   * Submit predictions and stake ETH.
+   * Stake ETH before playing.
+   */
+  const stakeETH = (amount: number, callback?: () => void) => {
+    if (!isConnected) {
+      toast.error("Please connect your wallet first.");
+      return;
+    }
+    if (amount <= 0) {
+      toast.error("Stake amount must be greater than 0.");
+      return;
+    }
+    if (balanceData && balanceData.value < parseEther(amount.toString())) {
+      toast.error("Insufficient balance.");
+      return;
+    }
+
+    writeContract(
+      {
+        address: CONTRACT_ADDRESS,
+        abi,
+        functionName: "stake",
+        args: [],
+        value: parseEther(amount.toString()),
+      },
+      {
+        onSuccess: () => {
+          toast.success("Stake successful!");
+          if (callback) callback();
+        },
+        onError: () => {
+          toast.error("Transaction failed. Please try again.");
+        },
+      }
+    );
+  };
+  /**
+   * Submit predictions after staking.
    */
   const submitPredictions = async (
     predictions: number[],
-    stakeAmount: number
+    correctAnswers: number[]
   ) => {
     if (!isConnected) {
       toast.error("Please connect your wallet first.");
       return;
     }
-    if (predictions.length !== 10) {
+    if (predictions.length !== 10 || correctAnswers.length !== 10) {
       toast.error("Invalid number of predictions.");
       return;
     }
-    if (stakeAmount <= 0) {
-      toast.error("You must stake some ETH.");
-      return;
-    }
 
-    try {
-      writeContract({
+    writeContract(
+      {
         address: CONTRACT_ADDRESS,
         abi,
         functionName: "submitPredictions",
-        args: [predictions],
-        value: parseEther(stakeAmount.toString()), // Convert ETH to Wei
-      });
-    } catch (err: unknown) {
-      if (err instanceof BaseError) {
-        toast.error(err.shortMessage || err.message);
+        args: [predictions, correctAnswers],
+      },
+      {
+        onSuccess: () => {
+          toast.success("Predictions submitted successfully!");
+          navigate("/result");
+        },
+        onError: () => {
+          toast.error("Transaction failed. Please try again.");
+        },
       }
-    }
+    );
   };
 
   /**
-   * Withdraw the staked ETH.
-   */
-  const withdrawStake = async () => {
-    if (!isConnected) {
-      toast.error("Please connect your wallet first.");
-      return;
-    }
-
-    try {
-      writeContract({
-        address: CONTRACT_ADDRESS,
-        abi,
-        functionName: "withdrawStake",
-        args: [],
-      });
-    } catch (err: unknown) {
-      if (err instanceof BaseError) {
-        toast.error(err.shortMessage || err.message);
-      }
-    }
-  };
-
-  /**
-   * Fetch player details from the smart contract.
+   * Fetch player details.
    */
   const { data: playerData, refetch: getPlayerDetails } = useReadContract({
     address: CONTRACT_ADDRESS,
@@ -94,39 +101,37 @@ export const useGuessGame = () => {
     args: address ? [address] : undefined,
   });
 
-  /**globalLeaderboard
-   * Fetch the game leaderboard.
+  /**
+   * Fetch latest game result.
    */
-  const { data: gameLeaderboard, refetch: getGameLeaderboard } =
+  const { data: playerLatestGameResult, refetch: getPlayerLatestGameResult } =
     useReadContract({
       address: CONTRACT_ADDRESS,
       abi,
-      functionName: "getGameLeaderboard",
-      args: [1],
+      functionName: "getPlayerLatestGameResult",
+      args: address ? [address] : undefined,
     });
 
   /**
-   * Fetch the global leaderboard.
+   * Fetch global leaderboard.
    */
   const { data: globalLeaderboard, refetch: getGlobalLeaderboard } =
     useReadContract({
       address: CONTRACT_ADDRESS,
       abi,
       functionName: "getGlobalLeaderboard",
-      args: address ? [address] : undefined,
     });
 
   return {
+    stakeETH,
     submitPredictions,
-    withdrawStake,
     getPlayerDetails,
-    getGameLeaderboard,
     getGlobalLeaderboard,
+    getPlayerLatestGameResult,
     playerData,
-    gameLeaderboard,
+    playerLatestGameResult,
     globalLeaderboard,
-    transactionStatus,
-    isPending
+    isPending,
   };
 };
 
