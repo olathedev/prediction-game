@@ -51,7 +51,7 @@ const LeaderBoard = () => {
                         {index + 1}
                       </span>
                     )}
-                    <span className="text-white">{player.username}</span>
+                    <span className="text-2xl text-white">{player.username}</span>
                   </div>
                   <span className="text-yellow-500 font-bold">
                     {player.totalPoints}
