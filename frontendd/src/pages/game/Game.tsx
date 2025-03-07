@@ -17,6 +17,7 @@ const Game = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showInfoScreen, setShowInfoScreen] = useState(true);
   const { stakeETH } = useGuessGame();
+
   useEffect(() => {
     const sound = new Howl({
       src: [startSound],
@@ -45,7 +46,6 @@ const Game = () => {
       option === currentQuestion?.options[0] ? 0 : 1,
     ]);
   };
-
 
   useEffect(() => {
     if (showInfoScreen) return;
@@ -103,6 +103,17 @@ const Game = () => {
         >
           {!gameOver ? (
             <div className="bg-custom-gradient p-8 relative flex md:h-[33rem] w-[22rem] md:w-[40rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] mt-12">
+              
+              {/* Question Progress */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="absolute top-8 left-12 text-xl font-semibold text-white  px-4 py-2 rounded-lg"
+              >
+                {currentQuestionIndex + 1} of 10
+              </motion.div>
+
               {/* Timer */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
