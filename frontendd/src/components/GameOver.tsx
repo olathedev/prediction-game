@@ -1,28 +1,21 @@
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "./Button";
 import { useGame } from "../context/GameContext";
 import { useGuessGame } from "../hooks/use-contract.hook";
-import { useEffect } from "react";
 
 interface GameOverModalProps {
   onClose: () => void;
 }
 
 const GameOverModal = ({ onClose }: GameOverModalProps) => {
-  const { submitPredictions, isPending, transactionStatus } = useGuessGame();
-  const { userAnswers } = useGame();
-  const navigate = useNavigate();
+  const { submitPredictions, isPending } = useGuessGame();
+  const { userAnswers, questions } = useGame();
 
   const handleClick = () => {
-    submitPredictions(userAnswers, 0.002);
+    const correctAnswers = questions.map((q) => parseInt(q.answer));
+    console.log(userAnswers, correctAnswers);
+    submitPredictions(userAnswers, correctAnswers);
   };
-
-  useEffect(() => {
-    if (transactionStatus === "success") {
-      navigate("/result");
-    }
-  }, [transactionStatus, navigate]);
 
   return (
     <motion.div

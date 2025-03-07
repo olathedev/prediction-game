@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import { useGame } from "../../context/GameContext";
 import GameOverModal from "../../components/GameOver";
-import TimeOver from "../../components/TimeOver"; 
+import TimeOver from "../../components/TimeOver";
 import toast from "react-hot-toast";
 import InfoScreen from "../../components/InfoScreen";
 import { Howl } from "howler";
 import startSound from "../../assets/sounds/start.mp3";
-import timerElapseSound from "../../assets/sounds/game-over.mp3"; 
+import timerElapseSound from "../../assets/sounds/game-over.mp3";
+import { useGuessGame } from "../../hooks/use-contract.hook";
 
 const Game = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [showInfoScreen, setShowInfoScreen] = useState(true);
-
+  const { stakeETH } = useGuessGame();
   useEffect(() => {
     const sound = new Howl({
       src: [startSound],
@@ -29,7 +30,6 @@ const Game = () => {
     currentQuestionIndex,
     nextQuestion,
     gameOver,
-    userAnswers,
     restartGame,
   } = useGame();
   const [predictions, setPredictions] = useState<number[]>([]);
@@ -46,9 +46,6 @@ const Game = () => {
     ]);
   };
 
-  useEffect(() => {
-    console.log(userAnswers);
-  }, [userAnswers]);
 
   useEffect(() => {
     if (showInfoScreen) return;
@@ -57,7 +54,6 @@ const Game = () => {
       setShowModal(true);
     }
   }, [gameOver, showInfoScreen]);
- 
 
   useEffect(() => {
     if (!showInfoScreen && timer > 0) {
@@ -91,7 +87,12 @@ const Game = () => {
   return (
     <>
       {showInfoScreen ? (
-        <InfoScreen onClose={() => {  restartGame();setShowInfoScreen(false); }} />
+        <InfoScreen
+          onClose={() => {
+            restartGame();
+            stakeETH(0.02, () => setShowInfoScreen(false));
+          }}
+        />
       ) : (
         <motion.section
           initial={{ opacity: 0, scale: 0.9 }}
@@ -167,7 +168,7 @@ const Game = () => {
               >
                 <Button
                   name="Go Back"
-                  onClick={() => navigate("/")}
+                  // onClick={() => navigate("/")}
                   className="uppercase bg-opacity-20"
                 />
                 <Button

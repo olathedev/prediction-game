@@ -1,27 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Button from "../../components/Button";
-import { useGuessGame } from "../../hooks/use-contract.hook";
+import { useGame } from "../../context/GameContext";
 
 const Results = () => {
   const navigate = useNavigate();
-    const { latestGameResult } = useGuessGame();
   
-  console.log(latestGameResult);
+  const {questions, userAnswers}= useGame();
 
   // Mocked data: Replace with real answers from state or API
-  const results = [
-    { question: "Which car won the race?", correct: true },
-    { question: "Is the sky blue?", correct: false },
-    { question: "Does water boil at 100°C?", correct: true },
-    { question: "Can birds swim?", correct: false },
-    { question: "Do fish breathe underwater?", correct: true },
-    { question: "Is 2+2=5?", correct: false },
-    { question: "Does the sun rise in the east?", correct: true },
-    { question: "Can humans fly without help?", correct: false },
-    { question: "Is Earth round?", correct: true },
-    { question: "Does fire burn?", correct: true },
-  ];
+  const results = questions.map((question, index) => ({
+    question: question.question,
+    correct: parseInt(question.answer) === userAnswers[index],
+  }));
 
   const totalCorrect = results.filter((res) => res.correct).length;
   const totalIncorrect = results.length - totalCorrect;

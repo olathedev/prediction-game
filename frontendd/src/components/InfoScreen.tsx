@@ -8,9 +8,9 @@ interface Props {
 }
 
 const InfoScreen = ({ onClose }: Props) => {
-  const { getQuestions, setQuestions } = useGame();
+  const { setQuestions } = useGame();
   const [loading, setLoading] = useState(false);
-
+  console.log(loading)
   const onStart = async () => {
     setLoading(true);
     try {
@@ -26,7 +26,7 @@ const InfoScreen = ({ onClose }: Props) => {
 
       console.log(data);
     } catch (error) {
-      console.error();
+      console.error(error);
       setLoading(false);
     }
   };
