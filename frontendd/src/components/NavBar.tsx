@@ -16,7 +16,7 @@ const NavBar = () => {
 
   console.log(playerData);
   return (
-    <div className="container flex items-center justify-between w-full md:mx-auto my-6 bg-[#2463FF]/40 py-2 sm:px-4 px-2 rounded-full">
+    <div className="container flex items-center justify-between w-full md:mx-auto my-6 bg-[#2463FF]/40 py-2 sm:px-4 px-2 rounded-full z-50">
       <div>
         <Link to="/" className="text-white flex">
           <img src="/images/lmm.png" className="max-w-12" alt="Logo" />
@@ -93,7 +93,7 @@ const NavBar = () => {
           <div className="flex items-center gap-2 mt-2">
             <img src="/images/coin.png" className="h-5" alt="Coin" />
             {playerData && (
-              <p className="text-lg">@{playerData?.totalPoints}</p>
+              <p className="text-lg">{playerData?.totalPoints}</p>
             )}
             {/* <span className="text-lg">20</span> */}
           </div>
