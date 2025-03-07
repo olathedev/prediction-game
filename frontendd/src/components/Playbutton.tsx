@@ -13,8 +13,8 @@ const PlayButton = () => {
         repeatDelay: 6,
       }}
       xmlns="http://www.w3.org/2000/svg"
-      width="160"
-      height="160"
+      width="150"
+      height="150"
       viewBox="0 0 160 160"
       fill="none"
       className="cursor-pointer outline-none md:h-[6rem] md:w-[6rem]"

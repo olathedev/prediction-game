@@ -19,7 +19,7 @@ const LeaderBoard = () => {
       exit={{ scale: 0 }}
       className="flex h-screen items-center justify-center"
     >
-      <div className="-mt-28 bg-custom-gradient relative flex h-[29.0625rem] w-[20.25rem] shrink-0 flex-col items-center justify-center gap-[1rem] rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] md:h-[31.25rem] md:w-[37rem] p-10">
+      <div className="-mt-28 pt-8 bg-custom-gradient relative flex h-[35.0625rem] overflow-auto w-full   shrink-0 flex-col items-center gap-[1rem] rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] md:h-[31.25rem] md:w-[37rem] p-10">
         <h1 className="text-4xl font-bold text-center mb-4">Leaderboard</h1>
 
         {isPending ? (
