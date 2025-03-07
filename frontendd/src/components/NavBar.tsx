@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
-import { IoMdMenu } from "react-icons/io";
+
+// @ts-ignore
+import { IoMdMenu } from "react-icons/io5";
+
+// @ts-ignore
 import { IoCloseSharp } from "react-icons/io5";
 import { useGuessGame } from "../hooks/use-contract.hook";
 import { PlayerData } from "../interface";
@@ -41,9 +45,35 @@ const NavBar = () => {
 
       <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? (
-          <IoCloseSharp className="h-6 w-6 text-white" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
         ) : (
-          <IoMdMenu className="h-6 w-6 text-white" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-5 text-white"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
         )}
       </button>
 
