@@ -6,20 +6,20 @@ import { useGuessGame } from "../hooks/use-contract.hook";
 import { useEffect } from "react";
 
 const TimeOver = () => {
-  const { isPending, transactionStatus } = useGuessGame();
+  const { isPending } = useGuessGame();
   const { restartGame } = useGame();
   const navigate = useNavigate();
 
-const onClose = () => {
+  const onClose = () => {
     restartGame();
     navigate("/");
   };
 
-  useEffect(() => {
-    if (transactionStatus === "success") {
-      navigate("/");
-    }
-  }, [transactionStatus, navigate]);
+  // useEffect(() => {
+  //   if (transactionStatus === "success") {
+  //     navigate("/");
+  //   }
+  // }, [transactionStatus, navigate]);
 
   return (
     <motion.div

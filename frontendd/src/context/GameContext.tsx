@@ -1,11 +1,16 @@
-import { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react";
-import questionsData from "../data/question.json"; // Import your JSON file
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 
 interface Question {
   question: string;
-  answer: string | number;
-  options: string[]
-
+  answer: string ;
+  options: string[];
 }
 
 interface GameContextType {
@@ -23,7 +28,7 @@ const GameContext = createContext<GameContextType | null>(null);
 
 export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);  
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [gameOver, setGameOver] = useState(false);
 
@@ -37,24 +42,29 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setGameOver(false);
   };
 
-  const getQuestions = async () => {
+  const getQuestions = useCallback(async () => {
     try {
-      const res = await fetch("https://prediction-api-1.onrender.com/api/create-question")
-      const data = await res.json()
-      console.log(data)
+      const res = await fetch(
+        "https://prediction-api-1.onrender.com/api/create-question"
+      );
+      const data = await res.json();
+      console.log(data);
     } catch (error) {
-      console.error()
+      console.error('Failed to fetch questions:', error);
     }
-  }
+  }, []);
 
-  const nextQuestion = useCallback((answer: number) => {
-    setUserAnswers((prev) => [...prev, answer]);
-    if (currentQuestionIndex < 9) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-    } else {
-      setGameOver(true);
-    }
-  }, [currentQuestionIndex]);
+  const nextQuestion = useCallback(
+    (answer: number) => {
+      setUserAnswers((prev) => [...prev, answer]);
+      if (currentQuestionIndex < 9) {
+        setCurrentQuestionIndex((prev) => prev + 1);
+      } else {
+        setGameOver(true);
+      }
+    },
+    [currentQuestionIndex]
+  );
 
   const value = useMemo(
     () => ({
@@ -65,9 +75,17 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       nextQuestion,
       restartGame: startNewGame,
       getQuestions,
-      setQuestions
+      setQuestions,
     }),
-    [questions, currentQuestionIndex, userAnswers, gameOver, nextQuestion, getQuestions, setQuestions]
+    [
+      questions,
+      currentQuestionIndex,
+      userAnswers,
+      gameOver,
+      nextQuestion,
+      getQuestions,
+      setQuestions,
+    ]
   );
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
