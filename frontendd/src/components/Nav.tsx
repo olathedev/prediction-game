@@ -27,7 +27,7 @@ const Nav: React.FC<NavProp> = ({ img }) => {
           damping: 10,
           delay: 0.5,
         }}
-        className="flex w-[21.25rem] shrink-0 items-center justify-between text-white md:w-[42.5rem] md:justify-normal md:gap-[4rem] xl:w-[75.75rem] xl:gap-[22rem]"
+        className="flex w-[21.25rem] shrink-0 items-center gap-5 text-white md:w-[42.5rem] md:justify-normal md:gap-[4rem] xl:w-[75.75rem] xl:gap-[22rem]"
       >
         <Link to="/">
           <motion.div

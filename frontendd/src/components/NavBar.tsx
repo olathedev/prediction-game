@@ -78,7 +78,7 @@ const NavBar = () => {
       </button>
 
       {menuOpen && (
-        <div className="absolute top-16 right-4 bg-[#2463FF] text-white rounded-lg p-4 shadow-md w-48">
+        <div className="absolute top-16 right-1 bg-[#2463FF] text-white rounded-lg p-4 shadow-md w-full z-50">
           {playerData && <p className="text-lg">@{playerData?.username}</p>}
           <div className="flex gap-2 items-center text-xl">
             <img
