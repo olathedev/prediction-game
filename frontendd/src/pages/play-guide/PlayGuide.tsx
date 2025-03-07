@@ -35,7 +35,7 @@ const PlayGuide = () => {
             <div className="text-center">
               <h4 className="text-4xl text-[#261676]">{content.title}</h4>
 
-              <p className="py-2 text-center text-xl text-[#261676] leading-relaxed">
+              <p className="py-2 text-center text-2xl text-[#261676] leading-relaxed">
                 {content.text}
               </p>
             </div>
