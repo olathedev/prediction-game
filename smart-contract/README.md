@@ -65,6 +65,17 @@ The `Lucky Me` smart contract is a blockchain-based prediction game where player
 - The contract uses `onlyOwner` to restrict fund withdrawals to the contract owner.
 - Safe handling of CORE transfers to prevent loss of funds.
 
+### Setup & Deploy Smart Contract
+```sh
+# Navigate to the smart contract directory
+cd smart-contracts
+
+# Install dependencies
+npm install
+
+# Compile the smart contracts
+npx hardhat compile
+
 ## License
 This project is licensed under the **UNLICENSED** SPDX identifier.
 

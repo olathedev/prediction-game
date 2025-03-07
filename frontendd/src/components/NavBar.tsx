@@ -16,7 +16,7 @@ const NavBar = () => {
 
   console.log(playerData);
   return (
-    <div className="container flex items-center justify-between w-full md:mx-auto my-6 bg-[#2463FF]/40 py-2 sm:px-4 px-2 rounded-full z-50">
+    <div className="container flex items-center justify-between w-full md:mx-auto my-6 bg-[#2463FF]/40 py-2 px-2 rounded-full z-50 sticky top-0">
       <div>
         <Link to="/" className="text-white flex">
           <img src="/images/lmm.png" className="max-w-12" alt="Logo" />
