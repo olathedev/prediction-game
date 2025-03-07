@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState } from "react";
-import { IoMdMenu } from "react-icons/io";
+
+// @ts-ignore
+import { IoMdMenu } from "react-icons/io5";
+
+// @ts-ignore
 import { IoCloseSharp } from "react-icons/io5";
 import { useGuessGame } from "../hooks/use-contract.hook";
 import { PlayerData } from "../interface";
