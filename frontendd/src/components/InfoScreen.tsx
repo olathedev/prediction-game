@@ -45,15 +45,20 @@ const InfoScreen = ({ onClose }: Props) => {
         <p className="text-[22px] text-gray-300 text-center">
           Hey there, Player! in this challanege you'll need to answer 10
           predictive questions, and would be required to stake{" "}
-          <span className="text-yellow-500">0.2 core tokens</span> you'll get
+          <span className="text-yellow-500">0.02 core tokens</span> you'll get
           back double of your stake if you get 8 predicitons right. You've got
-          just 60 seconds to showcase your skills and beat the clock or loose
+          just 45 seconds to showcase your skills and beat the clock or loose
           your stake, Remember, time waits for no one, so stay sharp and have
           fun! Good luck!
         </p>
+
+        {loading ? (
+          <p className="text-lg">Setting up...</p>
+        ) : (
         <div className="mt-4" onClick={onStart}>
           <PlayButton />
         </div>
+        )}
       </div>
     </motion.div>
   );
