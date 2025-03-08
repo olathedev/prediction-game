@@ -9,7 +9,7 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-  overflow: hidden;
+  /* overflow: hidden; */
   
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,6 +21,18 @@
   --font-display: "Outfit", "sans-serif"
   --font-monts: "Montserrat"
 }
+
+
+/* Hode browser scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 
 button {
   outline: none;
@@ -40,7 +52,7 @@ body {
     background-repeat: no-repeat;
   }
 }
-@media screen and (min-width: 720px) {
+@media screen and (min-width: 480px) {
   body {
     background: url("/images/background-tablet.svg"), linear-gradient(to bottom, #1e3c72, #2a5298);
     background-size: cover;
@@ -61,3 +73,4 @@ body {
 .bg-custom-gradient {
   background: linear-gradient(180deg, #344aba 0%, rgba(0, 20, 121, 0.83) 100%);
 }
+
