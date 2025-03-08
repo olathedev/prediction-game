@@ -52,7 +52,7 @@ const Home = () => {
             <h1 className="font text-5xl font-bold mb-2">Lucky Me</h1>
 
             <h3 className="text-2xl text-gray-300">
-              HyperVisual prediction game, built on{" "}
+              HyperCasual prediction game, built on{" "}
               <span className="text-yellow-500 font-bold">core</span>
             </h3>
           </div>
