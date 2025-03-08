@@ -1,25 +1,7 @@
 # Lucky Me
 
 ## Overview
-Lucky Me is a blockchain-based prediction game where players stake CORE tokens, submit answers to randomly generated questions, and earn points for correct predictions. The game is designed to be **fun, competitive, and rewarding**, featuring an AI-powered question-answering system and secure blockchain-based randomness to ensure fairness. Players compete for rankings on a **leaderboard** based on their accumulated points.
-
-## How It Works
-1. **Wallet Connection**: Players connect their wallets using **RainbowKit**.
-2. **Staking**: Players stake **0.02 CORE** to participate in a game session.
-3. **Prediction Phase**: The game presents **10 randomly generated questions**.
-4. **AI-Generated Answers**: An **AI agent** generates answers for each question in the background.
-5. **On-Chain Randomness**: The smart contract uses **secure randomness** to determine the correct answer (either **A or B**).
-6. **Scoring System**:
-   - **Correct Answer**: Players earn **100,000 points**.
-   - **Wrong Answer**: **20,000 points are deducted**.
-   - **Streak Bonus**: Players who get **3 consecutive correct answers** receive an extra **50,000 points**.
-7. **Leaderboard Ranking**: Players are ranked based on their total points.
-8. **Rewards**: Players who correctly predict at least **8 out of 10 answers** **double their staked CORE**.
-
-## AI-Powered Answer Generation & Blockchain Randomness
-- The **AI agent** generates random questions and potential answers, ensuring a dynamic and engaging gameplay experience.
-- The **final correct answer** for each question is determined **on-chain** using **randomness mechanisms** to ensure **fairness and prevent manipulation**.
-- Since blockchain randomness is crucial, the smart contract leverages **Core DAO's native random number generation (RNG) solutions** to finalize outcomes in a **provably fair** manner.
+Lucky Me is a blockchain-based prediction game where players stake CORE, submit answers to randomly generated questions, and earn points for correct predictions. Players are ranked on a leaderboard based on their total points. The game is powered by a **React + TypeScript frontend** integrated with a **Solidity smart contract** deployed on the blockchain.
 
 ## Tech Stack
 ### Frontend
@@ -33,16 +15,29 @@ Lucky Me is a blockchain-based prediction game where players stake CORE tokens, 
 - **Solidity** – Smart contract logic
 - **Hardhat** – Smart contract development and testing
 - **Core DAO Blockchain** – Deployed network
+- **Chainlink VRF (Verifiable Random Function)** – Ensures fair randomness in AI-generated predictions
 
 ## Features
 - **Wallet Connection**: Users connect via RainbowKit.
 - **CORE Staking**: Players stake CORE before playing.
-- **AI-Generated Questions**: Unique, unpredictable questions per session.
-- **Randomized Answers**: On-chain randomness determines correct predictions.
+- **AI-Powered Answer Generation**: The game utilizes an AI agent to generate random answers for each prediction question.
+- **Blockchain-Based Randomness**: AI-generated answers are verified using on-chain randomness, ensuring fairness and unpredictability.
+- **Prediction System**: Players submit answers to game questions.
 - **Automated Scoring**: Points awarded based on correct answers.
 - **Streak Bonus**: Extra points for consecutive correct answers.
 - **Leaderboard**: Top players ranked by total points.
 - **Smart Contract Integration**: Data stored securely on-chain.
+
+## How It Works
+1. **Stake CORE Tokens**: Players must stake **0.02 CORE** before starting a game.
+2. **Receive 10 Questions**: The game presents 10 randomly generated prediction-based questions.
+3. **AI Randomly Selects Answers**: A blockchain-based AI agent determines correct answers using **Chainlink VRF** for fairness.
+4. **Answer Submission**: Players select either option **A or B** as their prediction.
+5. **Scoring System**:
+   - Correct answer: **+100,000 points**
+   - Incorrect answer: **-20,000 points**
+   - 3 consecutive correct answers: **+50,000 bonus points**
+6. **Leaderboard & Rewards**: Players are ranked by their scores. If a player gets **8 or more correct answers**, they double their stake.
 
 ## Live Demo
 🔗 **Deployed Game:** [https://luckyme-game1.vercel.app/]
@@ -58,8 +53,9 @@ Lucky Me is a blockchain-based prediction game where players stake CORE tokens, 
 Ensure you have the following installed:
 - **Node.js** (LTS version recommended)
 - **npm**
+- **Hardhat** (for smart contract development)
 
-### Setup & Run
+### Setup & Run Frontend
 ```sh
 # Clone the repository
 git clone git@github.com:blockfuse-cohort-II/prediction-game.git
@@ -70,6 +66,24 @@ npm install
 
 # Start the development server
 npm run dev
+```
+
+### Setup & Deploy Smart Contract
+```sh
+# Navigate to the smart contract directory
+cd smart-contracts
+
+# Install dependencies
+npm install
+
+# Compile the smart contracts
+npx hardhat compile
+
+# Deploy to Core DAO Testnet (Sepolia or custom network)
+npx hardhat run scripts/deploy.js --network coredao
+
+# Verify the contract on the blockchain
+npx hardhat ignition verify LuckyMeGame --network coredao
 ```
 
 ## License
