@@ -10,7 +10,7 @@ import PlayGuide from "./pages/play-guide/PlayGuide";
 
 function App() {
   return (
-    <div className="lg:px-0 px-3">
+    <div className="lg:px-0 px-5">
       <Toaster position="top-center" reverseOrder={false} />
       <NavBar />
       <Routes>

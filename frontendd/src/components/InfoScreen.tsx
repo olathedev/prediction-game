@@ -39,7 +39,7 @@ const InfoScreen = ({ onClose }: Props) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.5, type: "spring", ease: "backInOut" }}
-      className="fixed inset-0 bg-black/50 flex items-center justify-center"
+      className="fixed inset-0 bg-black/50 flex items-center justify-center px-5"
     >
       <div className="bg-custom-gradient p-8 relative flex md:h-[30rem] w-full md:w-[38rem] flex-col items-center justify-center gap-8 rounded-[3rem] shadow-[inset_0px_-8px_0px_4px_#140E66,inset_0px_6px_0px_8px_#2463FF] mt-12">
         <h2 className="text-3xl font-bold text-white">

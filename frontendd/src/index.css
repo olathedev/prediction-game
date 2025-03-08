@@ -52,7 +52,7 @@ body {
     background-repeat: no-repeat;
   }
 }
-@media screen and (min-width: 720px) {
+@media screen and (min-width: 480px) {
   body {
     background: url("/images/background-tablet.svg"), linear-gradient(to bottom, #1e3c72, #2a5298);
     background-size: cover;

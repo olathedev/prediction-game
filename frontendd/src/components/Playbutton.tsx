@@ -17,7 +17,7 @@ const PlayButton = () => {
       height="150"
       viewBox="0 0 160 160"
       fill="none"
-      className="cursor-pointer outline-none md:h-[6rem] md:w-[6rem]"
+      className="cursor-pointer outline-none md:h-[6rem] md:w-[6rem] h-[4rem] w-[4rem]"
     >
       <g filter="url(#filter0_ii_51_167)">
         <rect
