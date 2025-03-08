@@ -33,11 +33,7 @@ Lucky Me is a blockchain-based prediction game where players stake CORE, submit 
 2. **Receive 10 Questions**: The game presents 10 randomly generated prediction-based questions.
 3. **AI Randomly Selects Answers**: A blockchain-based AI agent determines correct answers using **Chainlink VRF** for fairness.
 4. **Answer Submission**: Players select either option **A or B** as their prediction.
-5. **Scoring System**:
-   - Correct answer: **+100,000 points**
-   - Incorrect answer: **-20,000 points**
-   - 3 consecutive correct answers: **+50,000 bonus points**
-6. **Leaderboard & Rewards**: Players are ranked by their scores. If a player gets **8 or more correct answers**, they double their stake.
+5. **Leaderboard & Rewards**: Players are ranked by their scores. If a player gets **8 or more correct answers**, they double their stake.
 
 ## Live Demo
 🔗 **Deployed Game:** [https://luckyme-game1.vercel.app/]
