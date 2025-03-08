@@ -42,7 +42,10 @@ Lucky Me is a blockchain-based prediction game where players stake CORE, submit 
 📂 **Frontend & Smart Contract:** [https://github.com/blockfuse-cohort-II/prediction-game]
 
 ## Video Demo
-🎥 **Watch How It Works:** [Insert Video Link Here]
+
+🎥 **Watch How It Works:** [https://www.loom.com/share/26927082496542719a6ab7b0c4f8b1ca?sid=02b66ef4-45fd-45d8-a5bd-133d63922a2e]
+![Alt text](frontendd/public/images/homepage.png)
+
 
 ## Installation & Setup
 ### Prerequisites
