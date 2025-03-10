@@ -85,6 +85,3 @@ npx hardhat run scripts/deploy.js --network core
 
 ```
 
-## License
-This project is licensed under **UNLICENSED**.
-
