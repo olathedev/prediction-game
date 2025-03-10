@@ -15,7 +15,6 @@ Lucky Me is a blockchain-based prediction game where players stake CORE, submit 
 - **Solidity** – Smart contract logic
 - **Hardhat** – Smart contract development and testing
 - **Core DAO Blockchain** – Deployed network
-- **Chainlink VRF (Verifiable Random Function)** – Ensures fair randomness in AI-generated predictions
 
 ## Features
 - **Wallet Connection**: Users connect via RainbowKit.
@@ -59,6 +58,8 @@ Ensure you have the following installed:
 git clone git@github.com:blockfuse-cohort-II/prediction-game.git
 cd prediction-game
 
+cd frontendd
+
 # Install dependencies
 npm install
 
@@ -69,7 +70,9 @@ npm run dev
 ### Setup & Deploy Smart Contract
 ```sh
 # Navigate to the smart contract directory
-cd smart-contracts
+cd prediction game
+
+cd smart-contract
 
 # Install dependencies
 npm install
@@ -78,10 +81,8 @@ npm install
 npx hardhat compile
 
 # Deploy to Core DAO Testnet (Sepolia or custom network)
-npx hardhat run scripts/deploy.js --network coredao
+npx hardhat run scripts/deploy.js --network core
 
-# Verify the contract on the blockchain
-npx hardhat ignition verify LuckyMeGame --network coredao
 ```
 
 ## License
