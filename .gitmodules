@@ -1,0 +1,3 @@
+[submodule "prediction-api"]
+	path = prediction-api
+	url = https://github.com/chain-builders/prediction-api.git
