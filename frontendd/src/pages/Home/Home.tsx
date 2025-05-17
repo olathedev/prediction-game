@@ -53,7 +53,7 @@ const Home = () => {
 
             <h3 className="text-2xl text-gray-300">
               HyperCasual prediction game, built on{" "}
-              <span className="text-yellow-500 font-bold">core</span>
+              <span className="text-yellow-500 font-bold">base</span>
             </h3>
           </div>
 

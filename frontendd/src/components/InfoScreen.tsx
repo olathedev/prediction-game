@@ -48,7 +48,7 @@ const InfoScreen = ({ onClose }: Props) => {
         <p className="text-[22px] text-gray-300 text-center">
           Hey there, Player! In this challenge, you'll need to answer 10
           predictive questions and stake{" "}
-          <span className="text-yellow-500">0.02 CORE tokens</span>. If you get
+          <span className="text-yellow-500">0.02 ETH</span>. If you get
           8 predictions right, you'll double your stake. You've got just 45
           seconds to showcase your skills and beat the clock. Remember, time
           waits for no one, so stay sharp and have fun! Good luck!

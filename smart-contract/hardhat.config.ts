@@ -1,36 +1,62 @@
 import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-ignition";
 import "@nomicfoundation/hardhat-toolbox";
-import "dotenv/config"; // Ensure dotenv is imported
+import * as dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Ensure the private key is available
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
+if (!PRIVATE_KEY) {
+  throw new Error("Please set your PRIVATE_KEY in a .env file");
+}
+
+// RPC URL from environment variables
+const RPC_URL = process.env.RPC_URL || "https://sepolia.base.org";
+
+// Optional: Etherscan API key for verification (commented out since it's commented in your .env)
+// const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.28",
+  solidity: {
+    version: "0.8.20",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
   networks: {
-    sepolia: {
-      url: process.env.SEPOLIA_RPC_URL || "", // Fallback to empty string if undefined
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    // Base Sepolia testnet
+    baseSepolia: {
+      url: RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 84532, // Base Sepolia chain ID
     },
-    mainnet: {
-      url: process.env.MAINNET_RPC_URL || "",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-    },
-    core: {
-      url: "https://rpc.coredao.org", // Core DAO mainnet RPC
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-    },
-    coreTestnet: {
-      url: "https://rpc.test.btcs.network", // Core DAO testnet RPC
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-    },
-    forking: {
-      url: process.env.SEPOLIA_RPC_URL || "",
-    },
+    // You can add more networks here as needed
   },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY, // Move this outside 'networks'
-  },
-  sourcify: {
-    enabled: false,
+  // Uncomment when you want to use Etherscan verification
+  // etherscan: {
+  //   apiKey: {
+  //     baseSepolia: ETHERSCAN_API_KEY,
+  //   },
+  //   customChains: [
+  //     {
+  //       network: "baseSepolia",
+  //       chainId: 84532,
+  //       urls: {
+  //         apiURL: "https://api-sepolia.basescan.org/api",
+  //         browserURL: "https://sepolia.basescan.org",
+  //       },
+  //     },
+  //   ],
+  // },
+  paths: {
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts",
   },
 };
 
