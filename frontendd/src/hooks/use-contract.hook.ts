@@ -12,7 +12,7 @@ import { parseEther } from "viem";
 import { useNavigate } from "react-router-dom";
 
 const abi = rawAbi.abi;
-const CONTRACT_ADDRESS = "0x530fD6288a8Fb22EbFaE4f47C9FBf2aCeB905022";
+const CONTRACT_ADDRESS = "0xb202fc271B6A14b32Db7d8f43b82c7e383840211";
 
 export const useGuessGame = () => {
   const { isConnected, address } = useAccount();
